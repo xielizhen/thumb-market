@@ -1,0 +1,21 @@
+@import '../../styles/var.scss';
+
+.layout {
+  height: 100%;
+  background: $light-background-color;
+  min-width: 1000px;
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    line-height: 80px;
+    padding: 0 50px;
+    background: $dark-background-color;
+    color: $active-text-color
+  }
+  .logo {
+    color: $primary-color;
+    width: 120px;
+  }
+}

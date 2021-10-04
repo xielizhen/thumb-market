@@ -1,0 +1,53 @@
+.account-container {
+  display: flex;
+  .left {
+    width: 200px;
+    background: #1a1a1a;
+    height: calc(100vh - 80px);
+    .info-container {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      border-bottom: 1px solid #63ccea;
+      .head {
+        width: 80px;
+        height: 80px;
+        margin-top: 40px;
+      }
+      .name {
+        color: #F7F7F7;
+        margin-top: 10px;
+      }
+      .email {
+        font-size: 12px;
+        margin-top: 10px;
+      }
+      .btn {
+        margin: 20px 0 30px;
+      }
+    }
+    .router-container {
+      display: flex;
+      flex-direction: column;
+      color: #9F9F9F;
+      .link {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        padding-left: 45px;
+        > img {
+          width: 18px;
+          margin-right: 12px;
+        }
+        &.active {
+          background: #484848;
+          color: #63ccea;
+        }
+      }
+    }
+  }
+  .right {
+    flex: 1;
+    padding: 30px;
+  }
+}

@@ -1,0 +1,38 @@
+.inventory-tab {
+  .panels {
+    display: flex;
+    margin-top: 24px;
+    .panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 60px;
+      color: #fff;
+      &:last-child {
+        margin-right: 0;
+      }
+      .img {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(180deg,#585858, #414141 99%);
+        border: 1px solid #1a1a1a;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+      .name {
+        margin-top: 14px;
+      }
+      .attrs {
+        align-self: left;
+        color: #D6D6D6;
+        margin-top: 10px;
+        font-size: 12px;
+      }
+      :global {
+        .inventory-checkbox .ant-checkbox-inner {
+          border-color: #d6d6d6;
+        }
+      }
+    }
+  }
+}
