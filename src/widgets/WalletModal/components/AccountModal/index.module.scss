@@ -1,0 +1,32 @@
+@import '../../../../styles/var.scss';
+
+.account {
+  color: #d6d6d6;
+  font-weight: 600;
+  line-height: 1.5;
+  font-size: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  .view {
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+    color: $primary-color;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.logout {
+  display: flex;
+  justify-content: center;
+}

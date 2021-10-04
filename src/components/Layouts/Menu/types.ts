@@ -3,5 +3,6 @@ export interface MenuEntry {
   icon?: string;
   items?: MenuEntry[];
   href: string;
+  redirect?: string;
   calloutClass?: string;
 }

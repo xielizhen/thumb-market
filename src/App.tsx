@@ -4,9 +4,9 @@ import BigNumber from 'bignumber.js'
 import Layout from 'components/Layouts'
 import AccountLayout from 'components/Layouts/Account'
 import SuspenseWithChunkError from 'components/SuspenseWithChunkError'
-import history from './routerHistory'
+import useEagerConnect from 'hooks/useEagerConnect'
 import { Spin } from 'antd';
-import Account from 'components/Layouts/Account';
+import history from './routerHistory'
 
 // Route-based code splitting
 // Only pool is included in the main bundle because of it's the most visited page
@@ -25,6 +25,8 @@ BigNumber.config({
 })
 
 const App: React.FC = () => {
+  useEagerConnect()
+  
   return (
     <Router history={history}>
       <Layout>
@@ -48,9 +50,6 @@ const App: React.FC = () => {
               </Route>
               <Route path="/account/deposit" exact>
                 <Deposit />
-              </Route>
-              <Route path="/account">
-                <Redirect to="/account/assets" />
               </Route>
             </AccountLayout>
             <Route component={NotFound} />

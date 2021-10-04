@@ -4,15 +4,18 @@ import { HelmetProvider } from 'react-helmet-async'
 import { Provider } from 'react-redux'
 import { getLibrary } from 'utils/web3React'
 import { RefreshContextProvider } from 'contexts/RefreshContext'
+import store from 'state'
 
 const Providers: React.FC = ({ children }) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <HelmetProvider>
-        <RefreshContextProvider>
-          {children}
-        </RefreshContextProvider>
-      </HelmetProvider>
+      <Provider store={store}>
+        <HelmetProvider>
+          <RefreshContextProvider>
+            {children}
+          </RefreshContextProvider>
+        </HelmetProvider>
+      </Provider>
     </Web3ReactProvider>
   )
 }

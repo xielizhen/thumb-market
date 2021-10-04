@@ -19,6 +19,13 @@ export const getBitBowNFTAddress = () => {
   return getAddress(addresses.BitBowNFT)
 }
 
+export const getArrowAddress = () => {
+  return getAddress(addresses.Target)
+}
+
+export const getTargetAddress = () => {
+  return getAddress(addresses.Target)
+}
 
 export const getMulticallAddress = () => {
   return getAddress(addresses.multiCall)

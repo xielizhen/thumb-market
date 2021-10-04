@@ -17,6 +17,7 @@ const config: MenuEntry[] = [
   {
     label: 'My Account',
     href: '/account',
+    redirect: '/account/assets',
     items: [
       {
         label: 'Assets',

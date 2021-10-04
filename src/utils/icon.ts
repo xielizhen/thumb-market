@@ -1,20 +1,43 @@
 import md5 from 'js-md5';
+import ArrowIcon from 'assets/target.webp';
 
 export enum BitBowTypeEnum {
-  ARROW = 1,
-  SWORD = 2,
-  MIRROR = 3,
-  HAND = 4
+  BOW = 1,
+  ARROW = 2,
+  PEEP_SIGHT = 3,
+  ARMGUARD = 4
 }
 export interface IPropertiesRule {
   id: string,
+  label: string,
   type: BitBowTypeEnum,
   properties: {
     [key: string]: any
   }
 }
 
-export const BitBowTypes = [BitBowTypeEnum.ARROW, BitBowTypeEnum.SWORD, BitBowTypeEnum.MIRROR, BitBowTypeEnum.HAND]
+export const BitBowTypes = [
+  {
+    label: 'Bows',
+    value: BitBowTypeEnum.BOW,
+    imgSrc: ArrowIcon
+  },
+  {
+    label: 'Peep Sights',
+    value: BitBowTypeEnum.ARROW,
+    imgSrc: ArrowIcon
+  },
+  {
+    label: 'Arrows',
+    value: BitBowTypeEnum.PEEP_SIGHT,
+    imgSrc: ArrowIcon
+  },
+  {
+    label: 'Armguards',
+    value: BitBowTypeEnum.ARMGUARD,
+    imgSrc: ArrowIcon
+  }
+]
 class util {
   public static CalcIcon(type: number, model: number, color1: number, color2: number, color3?: number): string {
     if (type < 1 || type > 4) {
@@ -63,16 +86,16 @@ class util {
   public static PropertyRule (id: string, type: number, properties: string[]): IPropertiesRule {
     let propertyRules = []
     switch(type) {
-      case BitBowTypeEnum.ARROW: 
+      case BitBowTypeEnum.BOW: 
         propertyRules = ['quality', 'drawAnimRate', 'weight', 'stability', 'model', 'color1', 'color2', 'color3']
         break;
-      case BitBowTypeEnum.SWORD:
+      case BitBowTypeEnum.ARROW:
         propertyRules = ['quality', 'windResist', 'model', 'color1', 'color2', 'color3']
         break;
-      case BitBowTypeEnum.MIRROR:
+      case BitBowTypeEnum.PEEP_SIGHT:
         propertyRules = ['quality', 'fov', 'model', 'color1', 'color2', 'color3']
         break;
-      case BitBowTypeEnum.HAND:
+      case BitBowTypeEnum.ARMGUARD:
         propertyRules = ['quality', 'coinBonus', 'expBonus', 'model', 'color1', 'color2']
         break;
     }
@@ -82,6 +105,7 @@ class util {
     }, {})
     return {
       type,
+      label: BitBowTypes.find(o => o.value === type).label,
       id,
       properties: res
     }

@@ -26,7 +26,7 @@ const Menu: React.FC = () => {
         links.map((entry) => {
           return (
             <div className={cx('menu-item', { 'active': getActive(entry) })} key={entry.label}>
-              <MenuLink href={entry.href}>{entry.label}</MenuLink>
+              <MenuLink href={entry.redirect ? entry.redirect : entry.href}>{entry.label}</MenuLink>
             </div>
           )
         })

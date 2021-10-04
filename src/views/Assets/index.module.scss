@@ -1,4 +1,5 @@
 .assets-container {
+  color: #fff;
   .header {
     display: flex;
     align-items: center;
@@ -13,16 +14,25 @@
     display: flex;
     align-items: center;
     .panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-right: 40px;
       &:last-child {
         margin-right: 0;
       }
       .img {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 80px;
         height: 80px;
         background: linear-gradient(180deg,#585858, #414141 99%);
         border: 1px solid #1a1a1a;
         border-radius: 8px;
+        > img {
+          width: 40px;
+        }
       }
       .name {
         margin-top: 14px;
