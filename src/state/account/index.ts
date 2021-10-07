@@ -1,6 +1,6 @@
 import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
 import { BitBowTypeEnum } from 'utils/icon'
-import { Account, Assets, FormAsset } from '../types'
+import { Account, Assets, FormAsset, FormAssetProperty } from '../types'
 import { fetchAssets, fetchFormAssets } from './fetch'
 
 const initialState: Account = {
@@ -24,12 +24,15 @@ export const accountSlice = createSlice({
     },
     addFormAssets: (state, action: PayloadAction<FormAsset[]>) => {
       state.formAssets = action.payload
+    },
+    updateFormAssets: (state, action: PayloadAction<FormAssetProperty>) => {
+      console.log(action.payload)
     }
   },
 })
 
 // Actions
-export const { updateAssets, addFormAssets } = accountSlice.actions
+export const { updateAssets, addFormAssets, updateFormAssets } = accountSlice.actions
 
 // Thunks
 export const fetchAssetsThunk = (account: string) => async (dispatch: Dispatch) => {

@@ -1,6 +1,6 @@
 import React from "react";
 import uniqueId from "lodash/uniqueId";
-import Svg from "components/Svg";
+import Svg from "components/Svg/Svg";
 import { SvgProps } from "components/Svg/types";
 
 const Icon: React.FC<SvgProps> = (props) => {

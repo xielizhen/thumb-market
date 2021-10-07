@@ -6,7 +6,8 @@ import { useAllAssets, useAccount } from 'state/account/hooks'
 import { BitBowTypeEnum, BitBowTypes } from 'utils/icon'
 
 import TargetIcon from 'assets/target.webp';
-import ArrowIcon from 'assets/arrow.webp';
+import ArrowsIcon from 'assets/arrows.webp';
+import BnbIcon from 'assets/bnbLogo.webp';
 import styles from './index.module.scss'
 
 const cx = classNames.bind(styles);
@@ -31,7 +32,7 @@ const AccountAssets: React.FC = () => {
       <div className={cx('panels')}>
         <div className={cx('panel')}>
           <div className={cx('img')}>
-            <img src={ArrowIcon} alt="" />
+            <img src={ArrowsIcon} alt="" />
           </div>
           <div className={cx('name')}>{assets.arrowNum} Arrows</div>
         </div>
@@ -43,7 +44,7 @@ const AccountAssets: React.FC = () => {
         </div>
         <div className={cx('panel')}>
           <div className={cx('img')}>
-            <img src={TargetIcon} alt="" />
+            <img src={BnbIcon} alt="" />
           </div>
           <div className={cx('name')}>{new BigNumber(assets.BNBNum).toFixed(3)} BNB</div>
         </div>
@@ -57,7 +58,7 @@ const AccountAssets: React.FC = () => {
                 <img src={item.imgSrc} alt="" />
               </div>
               <div className={cx('name')}>
-                {formAssets.find(o => o.type === item.value)?.assets.length || 0} {item.label}
+                {formAssets.find(o => o.type === item.value)?.assets.length || 0} {item.label}s
               </div>
             </div>
           ))

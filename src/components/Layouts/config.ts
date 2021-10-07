@@ -1,9 +1,5 @@
-import { MenuEntry } from './Menu/types'
-
-import assetsIcon from 'assets/assets.webp'
-import inventoryIcon from 'assets/inventory.webp'
-import mysteryIcon from 'assets/mystery.webp'
-import depositIcon from 'assets/deposit.webp'
+import { MenuEntry } from './Menu/types';
+import { AssetsIcon, InventoryIcon, MysteryIcon, DespoitIcon } from 'components/Svg'
 
 const config: MenuEntry[] = [
   {
@@ -22,22 +18,22 @@ const config: MenuEntry[] = [
       {
         label: 'Assets',
         href: '/account/assets',
-        icon: assetsIcon
+        icon: AssetsIcon
       },
       {
         label: 'Inventory',
         href: '/account/inventory',
-        icon: inventoryIcon
+        icon: InventoryIcon
       },
       {
         label: 'Mystery box',
         href: '/account/mystery',
-        icon: mysteryIcon
+        icon: MysteryIcon
       },
       {
         label: 'Deposit',
         href: '/account/deposit',
-        icon: depositIcon
+        icon: DespoitIcon
       }
     ]
   }

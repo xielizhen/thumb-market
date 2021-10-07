@@ -20,7 +20,7 @@ const Inventory: React.FC = () => {
           const assets = formAssets.find(o => o.type === tab.value)?.assets || []
           const count = assets.length
           return (
-            <TabPane tab={`${tab.label}（${count}）`} key={tab.value}>
+            <TabPane tab={`${tab.label}s（${count}）`} key={tab.value}>
               <InventoryTab assets={assets} />
             </TabPane>
           )

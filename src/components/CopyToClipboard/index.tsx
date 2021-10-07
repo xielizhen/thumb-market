@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import classNames from 'classnames/bind';
-import CopyIcon from 'components/Svg/icons/Copy';
+import { CopyIcon } from 'components/Svg';
 
 import styles from './index.module.scss';
 

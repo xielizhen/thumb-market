@@ -1,5 +1,8 @@
 import md5 from 'js-md5';
-import ArrowIcon from 'assets/target.webp';
+import ArrowIcon from 'assets/arrow.webp';
+import ArmguardIcon from 'assets/armguard.webp';
+import BowIcon from 'assets/bow.webp';
+import PeepSightIcon from 'assets/peepSight.webp';
 
 export enum BitBowTypeEnum {
   BOW = 1,
@@ -16,26 +19,32 @@ export interface IPropertiesRule {
   }
 }
 
-export const BitBowTypes = [
+export interface BitBowItem {
+  label: string
+  value: BitBowTypeEnum,
+  imgSrc: string
+}
+
+export const BitBowTypes: BitBowItem[] = [
   {
-    label: 'Bows',
+    label: 'Bow',
     value: BitBowTypeEnum.BOW,
-    imgSrc: ArrowIcon
+    imgSrc: BowIcon
   },
   {
-    label: 'Peep Sights',
-    value: BitBowTypeEnum.ARROW,
-    imgSrc: ArrowIcon
-  },
-  {
-    label: 'Arrows',
+    label: 'Arrow',
     value: BitBowTypeEnum.PEEP_SIGHT,
     imgSrc: ArrowIcon
   },
   {
-    label: 'Armguards',
+    label: 'Peep Sight',
+    value: BitBowTypeEnum.ARROW,
+    imgSrc: PeepSightIcon
+  },
+  {
+    label: 'Armguard',
     value: BitBowTypeEnum.ARMGUARD,
-    imgSrc: ArrowIcon
+    imgSrc: ArmguardIcon
   }
 ]
 class util {

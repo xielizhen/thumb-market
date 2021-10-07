@@ -49,7 +49,7 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
                 <div className={cx('attrs')}>
                   {
                      Object.entries(attrs).map(([key, value]) => (
-                      <p>{key}: {value}</p>
+                      <p key={key}>{key}: {value}</p>
                     ))
                   }
                 </div>

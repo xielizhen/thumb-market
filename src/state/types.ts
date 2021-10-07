@@ -6,9 +6,13 @@ export interface Assets {
   BNBNum?: number
 }
 
+export interface FormAssetProperty extends IPropertiesRule {
+  imgSrc: string
+}
+
 export interface FormAsset {
   type: BitBowTypeEnum,
-  assets: IPropertiesRule[]
+  assets: FormAssetProperty[]
 }
 
 // account

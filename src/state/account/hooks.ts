@@ -1,12 +1,12 @@
 import { useWeb3React } from '@web3-react/core'
 import useWeb3 from 'hooks/useWeb3'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state'
-import { Account, State } from 'state/types'
+import { Account, FormAssetProperty, State } from 'state/types'
 import BigNumber from 'bignumber.js'
-import { fetchAssetsThunk, fetchFormAssetsThunk, updateAssets } from '.'
 import { BIG_TEN } from 'utils/bigNumber'
+import { fetchAssetsThunk, fetchFormAssetsThunk, updateAssets, updateFormAssets } from '.'
 
 export const useAllAssets = () => {
   const dispatch = useAppDispatch()
@@ -24,6 +24,17 @@ export const useAllAssets = () => {
       })
     }
   }, [dispatch, account, web3])
+}
+
+export const useUpdateFormAssets = () => {
+  const dispatch = useAppDispatch()
+  const { account } = useWeb3React()
+  const web3 = useWeb3()
+  const handleUpdateFormAsset = useCallback(async (asset: FormAssetProperty) => {
+    dispatch(updateFormAssets(asset))
+  }, [account, dispatch, web3])
+
+  return { handleUpdateFormAsset }
 }
 
 // 获取计算值

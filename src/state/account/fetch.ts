@@ -1,12 +1,26 @@
 import BigNumber from 'bignumber.js'
 import multicall from 'utils/multicall'
-import { Assets, FormAsset } from 'state/types'
+import { Assets, FormAsset, FormAssetProperty } from 'state/types'
 import { BIG_TEN } from 'utils/bigNumber'
 import UtilIcon from 'utils/icon'
 
 import erc20ABI from 'config/abi/erc20.json'
 import { getArrowAddress, getTargetAddress } from 'utils/addressHelpers'
 import { getBitBowNFTContract, getBitBowRepositoryContract } from 'utils/contractHelpers'
+import { IMG_BASE_URL } from 'config'
+
+export const fetchPropertiesById = async (id: string): Promise<FormAssetProperty> => {
+  // 根据id获取到该物品的属性
+  const item = await getBitBowRepositoryContract().methods.get(id).call()
+  // 生成用户图片
+  const property = UtilIcon.PropertyRule(id, +item.form, item.properties)
+  const url = UtilIcon.CalcIcon(+item.form, property.properties.model, property.properties.color1, property.properties.color2, property.properties.color3)
+  const asset = {
+    ...property,
+    imgSrc: `${IMG_BASE_URL}${url}`
+  }
+  return asset
+}
 
 export const fetchAssets = async (account: string): Promise<Assets> => {
   const calls = [
@@ -44,16 +58,16 @@ export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => 
     try {
       // 根据序列号把每一个nft的id获取到
       const id = await getBitBowNFTContract().methods.tokenOfOwnerByIndex(account, i).call()
-      // 根据id获取到该物品的属性
-      const item = await getBitBowRepositoryContract().methods.get(id).call()
-      const property = UtilIcon.PropertyRule(id, +item.form, item.properties)
-      const idx = res.findIndex(o => o.type === property.type)
+      // 生成properties和imgurl
+      const asset = await fetchPropertiesById(id)
+      // 生成对应数据
+      const idx = res.findIndex(o => o.type === asset.type)
       if (idx > -1) {
-        res[idx].assets = res[idx].assets.push(property)
+        res[idx].assets = res[idx].assets.push(asset)
       } else {
         res.push({
-          type: property.type,
-          assets: [property]
+          type: asset.type,
+          assets: [asset]
         })
       }
     } catch (err) {

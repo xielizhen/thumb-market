@@ -2,13 +2,16 @@ import React from "react";
 import { Input, Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons'
 import classNames from "classnames/bind";
+import { useAccount } from "state/account/hooks";
 
 import styles from './index.module.scss';
+import { useWeb3React } from "@web3-react/core";
 
 const cx = classNames.bind(styles);
 
 const Deposit: React.FC = () => {
-
+  const { account } = useWeb3React()
+  const { assets } = useAccount()
   const onSearch = () => {
 
   }
@@ -21,7 +24,7 @@ const Deposit: React.FC = () => {
           <div className={cx('title')}>Wallet</div>
           <div className={cx('desc')}>
             <img src="" alt="" />
-            <span>1000 Targets</span>
+            <span>{assets.targetNum} Targets</span>
           </div>
         </div>
         <div className={cx('game-balance')}>
@@ -41,7 +44,7 @@ const Deposit: React.FC = () => {
             <img src="" alt="" />
             <div>
               <div className={cx('name')}>BNB Network</div>
-              <div className={cx("address")}>dkaekdldiaidddfjaskfjsdaf000</div>
+              <div className={cx("address")}>{account}</div>
             </div>
           </div>
         </div>
@@ -53,7 +56,7 @@ const Deposit: React.FC = () => {
           <div className={cx('detail')}>
             <img src="" alt="" />
             <div>
-              <div className={cx('name')}>BNB Network</div>
+              <div className={cx('name')}>Game address</div>
               <div className={cx('address')}>dkaekdldiaidddfjaskfjsdaf000</div>
             </div>
           </div>

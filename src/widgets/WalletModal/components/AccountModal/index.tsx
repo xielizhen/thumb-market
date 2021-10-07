@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'antd';
 import { connectorLocalStorageKey } from 'utils/types';
 import classNames from 'classnames/bind';
-import OpenNewIcon from "components/Svg/icons/OpenNew";
+import OpenNewIcon from "components/Svg/Icons/OpenNew";
 
 import CopyToClipboard from 'components/CopyToClipboard';
 
