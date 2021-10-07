@@ -5,13 +5,13 @@ import classNames from 'classnames/bind';
 import SellModal from '../SellModal';
 import SynthesizeModal from '../SynthesizeModal';
 import styles from './index.module.scss'
-import { IPropertiesRule } from 'utils/icon';
+import { FormAssetProperty } from 'state/types';
 
 const cx = classNames.bind(styles)
 const { Option } = Select
 
 interface IProps {
-  assets: IPropertiesRule[]
+  assets: FormAssetProperty[]
 }
 const InventoryTab: React.FC<IProps> = ({ assets }) => {
   const [checkedList, setCheckedList] = useState<string[]>()
@@ -39,10 +39,11 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
               if (!unShowAttributes.includes(curr)) acc[curr] = tab.properties[curr]
               return acc
             }, {})
-
             return (
               <div className={cx('panel')} key={tab.id}>
-                <div className={cx('img')}></div>
+                <div className={cx('img')}>
+                  <img src={tab.imgSrc} alt="" />
+                </div>
                 <Checkbox onChange={(e) => handleCheckedChange(e.target.checked, tab.id)} className={cx('inventory-checkbox')} />
                 <div className={cx('name')}>{ }</div>
                 <Button style={{ marginTop: '14px', width: '80px' }} type="primary">sell</Button>

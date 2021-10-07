@@ -33,12 +33,12 @@ export const BitBowTypes: BitBowItem[] = [
   },
   {
     label: 'Arrow',
-    value: BitBowTypeEnum.PEEP_SIGHT,
+    value: BitBowTypeEnum.ARROW,
     imgSrc: ArrowIcon
   },
   {
     label: 'Peep Sight',
-    value: BitBowTypeEnum.ARROW,
+    value: BitBowTypeEnum.PEEP_SIGHT,
     imgSrc: PeepSightIcon
   },
   {

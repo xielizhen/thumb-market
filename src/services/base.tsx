@@ -1,6 +1,6 @@
+import { notification } from 'antd';
 import axios from 'axios';
 
-console.log(process.env)
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   timeout: 30000,
@@ -19,7 +19,14 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   function (response) {
-    // TODO: 添加response事件处理
+    const { code, msg } = response.data
+    if (code !== 200) {
+      notification.error({
+        message: 'Fetch Error',
+        description: msg
+      })
+      return Promise.reject(msg)
+    }
     return response.data
   },
   function (error) {

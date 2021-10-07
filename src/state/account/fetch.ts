@@ -8,7 +8,13 @@ import erc20ABI from 'config/abi/erc20.json'
 import { getArrowAddress, getTargetAddress } from 'utils/addressHelpers'
 import { getBitBowNFTContract, getBitBowRepositoryContract } from 'utils/contractHelpers'
 import { IMG_BASE_URL } from 'config'
+import { IAccountRes, getThumbAccount } from 'services/api'
 
+/**
+ * 根据id获取物品的属性和图片
+ * @param id 
+ * @returns 
+ */
 export const fetchPropertiesById = async (id: string): Promise<FormAssetProperty> => {
   // 根据id获取到该物品的属性
   const item = await getBitBowRepositoryContract().methods.get(id).call()
@@ -22,6 +28,11 @@ export const fetchPropertiesById = async (id: string): Promise<FormAssetProperty
   return asset
 }
 
+/**
+ * 获取用户的arrow、target等asset
+ * @param account 
+ * @returns 
+ */
 export const fetchAssets = async (account: string): Promise<Assets> => {
   const calls = [
     {
@@ -49,6 +60,11 @@ export const fetchAssets = async (account: string): Promise<Assets> => {
   }
 }
 
+/**
+ * 获取用户对应的弓、剑、放大镜和护具等asset
+ * @param account 
+ * @returns 
+ */
 export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => {
   // 获取该地址名下有几个nft
   const nftNum = await getBitBowNFTContract().methods.balanceOf(account).call()
@@ -63,7 +79,7 @@ export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => 
       // 生成对应数据
       const idx = res.findIndex(o => o.type === asset.type)
       if (idx > -1) {
-        res[idx].assets = res[idx].assets.push(asset)
+        res[idx].assets = res[idx].assets.concat(asset)
       } else {
         res.push({
           type: asset.type,
@@ -75,6 +91,12 @@ export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => 
     }
   }
   return res
+}
+
+
+export const fetchUserInfo = async (account: string): Promise<IAccountRes> => {
+  const data = await getThumbAccount(account)
+  return data
 }
 
 

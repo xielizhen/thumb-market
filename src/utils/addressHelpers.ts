@@ -20,7 +20,7 @@ export const getBitBowNFTAddress = () => {
 }
 
 export const getArrowAddress = () => {
-  return getAddress(addresses.Target)
+  return getAddress(addresses.Arrow)
 }
 
 export const getTargetAddress = () => {

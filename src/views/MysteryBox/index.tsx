@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Modal, notification } from 'antd';
 import classNames from 'classnames/bind';
+import BigNumber from 'bignumber.js';
 
 import styles from './index.module.scss';
 import giftImg from 'assets/gift.webp'
 import { BitBowTypeEnum, BitBowTypes, BitBowItem } from 'utils/icon';
 import moment from 'moment';
-import { getBitBowFactoryContract, getBitBowNFTContract } from 'utils/contractHelpers'
+import { getBitBowFactoryContract, getBitBowNFTContract, getArrowContract } from 'utils/contractHelpers'
+import { getBitBowFactoryAddress } from 'utils/addressHelpers'
 import { useWeb3React } from '@web3-react/core';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
@@ -14,6 +16,7 @@ import { FormAssetProperty } from 'state/types';
 import { useUpdateFormAssets } from 'state/account/hooks';
 
 const cx = classNames.bind(styles);
+const MAX_UNIT_256 = new BigNumber(2).pow(256).minus(1);
 
 const getMysteryItem = (): BitBowItem => {
   const currentWeek = moment().week();
@@ -31,34 +34,87 @@ const MysteryBox: React.FC = () => {
   const [fee, setFee] = useState(0)
   const [mystery, setMystery] = useState(BitBowTypes[0])
   const [formAsset, setFormAsset] = useState<FormAssetProperty>()
+  const [isApproved, setIsApproved] = useState(false)
+  const [disabled, setDisabled] = useState(true)
 
-  const getMintFee = useCallback(async () => {
+  // 获取开盲盒所需费用
+  const getMintFee = async () => {
     const fee = await getBitBowFactoryContract().methods.mintFee().call();
     setFee(fee)
-  }, [account])
+  }
 
+  // 获取授权金额
+  const getIsApproved = async () => {
+    if (!account) return
+    try {
+      setDisabled(true)
+      const allownance = await getArrowContract()
+        .methods
+        .allowance(account, getBitBowFactoryAddress())
+        .call()
+      setIsApproved(+allownance > 1000)
+    } finally {
+      setDisabled(false)
+    }
+  }
+  
+  // 抽取盲盒
   const handleOpenMystery = async () => {
     try {
       setOpenBtnLoading(true)
       // 判断该地址是否领取过首次盲盒
       const isNft = await getBitBowNFTContract().methods.balanceOf(account).call();
-      const isFirst = await getBitBowFactoryContract().methods.firstAddress(account).call()
 
       // 抽取盲盒
       const id = await getBitBowFactoryContract(web3)
         .methods
-        .openMysteryBox(1, false)
+        .openMysteryBox(3, !isNft)
+        .send({
+          gas: 500000,
+          from: account
+        }).on('receipt', (tx) => {
+          console.log(tx)
+        })
+      
+      console.log(id)
+
+      // 根据id获取properties和img
+      // const asset = await fetchPropertiesById(id)
+      // setFormAsset(asset)
+      // setVisible(true)
+
+      // 更新formAssets
+      // handleUpdateFormAsset(asset)
+    } catch (e: any) {
+      notification.error({
+        message: 'Error',
+        description: e?.message
+      })
+    } finally {
+      setOpenBtnLoading(false)
+    }
+  }
+
+  // 授权
+  const handleApprove = async () => {
+    try {
+      setOpenBtnLoading(true)
+      await getArrowContract(web3)
+        .methods
+        .approve(getBitBowFactoryAddress(), MAX_UNIT_256)
         .send({
           from: account
         })
+        .on('transactionHash', (tx) => {
+          return tx.transactionHash
+        })
 
-      // 根据id获取properties和img
-      const asset = await fetchPropertiesById(id)
-      setFormAsset(asset)
-      setVisible(true)
-
-      // 更新formAssets
-      handleUpdateFormAsset(asset)
+      await getIsApproved()
+    } catch (e: any) {
+      notification.error({
+        message: 'Error',
+        description: e?.message
+      })
     } finally {
       setOpenBtnLoading(false)
     }
@@ -66,7 +122,8 @@ const MysteryBox: React.FC = () => {
 
   useEffect(() => {
     getMintFee()
-  }, [getMintFee])
+    getIsApproved()
+  }, [account])
 
   useEffect(() => {
     setMystery(getMysteryItem())
@@ -78,7 +135,11 @@ const MysteryBox: React.FC = () => {
       <div>
         This blind box contains an {mystery.label} <br /> Cost for each attempt: {fee} Targets
       </div>
-      <Button loading={openBtnLoading} size="large" type="primary" onClick={handleOpenMystery}>Open it</Button>
+      {
+        isApproved
+          ? <Button disabled={disabled} loading={openBtnLoading} size="large" type="primary" onClick={handleOpenMystery}>Open it</Button>
+          : <Button disabled={disabled} loading={openBtnLoading} size="large" type="primary" onClick={handleApprove}>Approve it</Button>
+      }
 
       <Modal
         className='mystery-modal'

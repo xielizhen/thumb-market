@@ -1,3 +1,4 @@
+import { IAccountRes } from 'services/api'
 import { BitBowTypeEnum, IPropertiesRule } from 'utils/icon'
 // assets
 export interface Assets {
@@ -18,7 +19,8 @@ export interface FormAsset {
 // account
 export type Account = {
   assets: Assets,
-  formAssets?: FormAsset[]
+  formAssets?: FormAsset[],
+  userInfo: IAccountRes
 }
 
 export interface State {

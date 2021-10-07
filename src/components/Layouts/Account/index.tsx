@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core';
 import Wallet from 'widgets/WalletModal';
 import { NavLink } from 'react-router-dom';
 import useAuth from 'hooks/useAuth';
-import { useAllAssets } from 'state/account/hooks';
+import { useAllAssets, useGetUserInfo } from 'state/account/hooks';
 import { getThumbAccount } from 'services/api';
 
 import HeadImg from 'assets/head.webp';
@@ -21,6 +21,7 @@ const Account: React.FC = ({ children }) => {
   const { account } = useWeb3React();
   const { login, logout } = useAuth();
   useAllAssets();
+  useGetUserInfo();
 
   useEffect(() => {
     if (account) {

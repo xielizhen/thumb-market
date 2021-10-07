@@ -1,3 +1,5 @@
+@import '../../styles/var.scss';
+
 .deposit-container {
   color: #fff;
   .balance {
@@ -12,11 +14,11 @@
       padding: 22px;
       font-weight: 500;
       &.wallet-balance {
-        background: #63ccea;
-        color: #484848
+        background: $primary-color;
+        color: #484848;
       }
       &.game-balance {
-        border: 1px solid #63ccea;
+        border: 1px solid $primary-color;
         color: #fff;
         margin-left: 40px;
       }
@@ -24,8 +26,15 @@
         font-size: 32px;
       }
       .desc {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-top: 12px;
         font-size: 24px;
+        > img {
+          width: 30px;
+          margin-right: 20px;
+        }
       }
     }
   }
@@ -61,19 +70,32 @@
       }
     }
     .transfer {
-      margin: 20px 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      margin-top: 20px;
+      color: #1a1a1a;
     }
   }
   .btn-container {
     display: flex;
     justify-content: flex-end;
   }
+  .deposit-input-container {
+    display: flex;
+    .divider {
+      content: '';
+      margin-left: 40px;
+      flex: 1;
+    }
+  }
 }
 
 :global {
   .deposit-input {
     margin-top: 8px;
-    width: 576px;
+    flex: 1;
     background: #303030;
   }
   .deposit-confirm-btn {

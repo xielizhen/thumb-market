@@ -37,3 +37,4 @@ export const AUCTION_BIDDERS_TO_FETCH = 500
 export const RECLAIM_AUCTIONS_TO_FETCH = 500
 export const AUCTION_WHITELISTED_BIDDERS_TO_FETCH = 500
 export const IMG_BASE_URL = 'https://bitbow.s3.ap-southeast-1.amazonaws.com/res/icons/'
+export const GAME_ADDRESS = '0x5bD790d42777B52Fe7C19BF4021820DEb139332A'
