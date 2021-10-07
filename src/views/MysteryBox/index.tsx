@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Modal, notification } from 'antd';
 import classNames from 'classnames/bind';
 import BigNumber from 'bignumber.js';
 
 import styles from './index.module.scss';
 import giftImg from 'assets/gift.webp'
-import { BitBowTypeEnum, BitBowTypes, BitBowItem } from 'utils/icon';
+import { BitBowTypes, BitBowItem } from 'utils/icon';
 import moment from 'moment';
 import { getBitBowFactoryContract, getBitBowNFTContract, getArrowContract } from 'utils/contractHelpers'
-import { getBitBowFactoryAddress } from 'utils/addressHelpers'
+import { getBitBowFactoryAddress, getBitBowNFTAddress } from 'utils/addressHelpers'
 import { useWeb3React } from '@web3-react/core';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
@@ -37,6 +37,19 @@ const MysteryBox: React.FC = () => {
   const [isApproved, setIsApproved] = useState(false)
   const [disabled, setDisabled] = useState(true)
 
+
+  const attrs = useMemo(() => {
+    if (formAsset) {
+      const unShowAttributes = ['mode', 'color1', 'color2', 'color3']
+      const attrs = Object.keys(formAsset.properties).reduce((acc, curr) => {
+        if (!unShowAttributes.includes(curr)) acc[curr] = formAsset.properties[curr]
+        return acc
+      }, {})
+      return attrs
+    }
+    return {}
+  }, [formAsset])
+
   // 获取开盲盒所需费用
   const getMintFee = async () => {
     const fee = await getBitBowFactoryContract().methods.mintFee().call();
@@ -57,7 +70,7 @@ const MysteryBox: React.FC = () => {
       setDisabled(false)
     }
   }
-  
+
   // 抽取盲盒
   const handleOpenMystery = async () => {
     try {
@@ -66,25 +79,30 @@ const MysteryBox: React.FC = () => {
       const isNft = await getBitBowNFTContract().methods.balanceOf(account).call();
 
       // 抽取盲盒
-      const id = await getBitBowFactoryContract(web3)
+      const receipt = await getBitBowFactoryContract(web3)
         .methods
-        .openMysteryBox(3, !isNft)
+        .openMysteryBox(mystery.value, !isNft)
         .send({
           gas: 500000,
           from: account
-        }).on('receipt', (tx) => {
-          console.log(tx)
         })
-      
-      console.log(id)
+      let id = 0
+      const events = receipt.events
+      for (let key in events) {
+        const event = events[key]
+        if (event.address === getBitBowNFTAddress()) {
+          const topics = event.raw.topics
+          id = parseInt(topics[topics.length - 1], 16)
+        }
+      }
 
       // 根据id获取properties和img
-      // const asset = await fetchPropertiesById(id)
-      // setFormAsset(asset)
-      // setVisible(true)
+      const asset = await fetchPropertiesById(String(id))
+      setFormAsset(asset)
+      setVisible(true)
 
       // 更新formAssets
-      // handleUpdateFormAsset(asset)
+      handleUpdateFormAsset(asset)
     } catch (e: any) {
       notification.error({
         message: 'Error',
@@ -148,22 +166,24 @@ const MysteryBox: React.FC = () => {
         width={690}
         footer={null}
         visible={visible}
-        // onOk={this.hideModal}
-        // onCancel={this.hideModal}
         okText="确认"
         cancelText="取消"
       >
         <div className={cx('modal-content')}>
-          <div className={cx('info')}>You got a XXX bow from the blind box</div>
+          <div className={cx('info')}>You got a {BitBowTypes.find(o => o.value === formAsset?.type)?.label} from the blind box</div>
           <div className={cx('detail')}>
-            <div className={cx('img')}></div>
+            <div className={cx('img')}>
+              <img src={formAsset?.imgSrc} alt="" />
+            </div>
             <div className={cx('attrs')}>
-              <p>Deadly Bow</p>
-              <p>Quality：Normal</p>
-              <p>Weight：24</p>
+              {
+                Object.entries(attrs).map(([key, value]) => (
+                  <p>{key}: {value}</p>
+                ))
+              }
             </div>
           </div>
-          <Button type="primary" size="large">Great</Button>
+          <Button type="primary" size="large" onClick={() => setVisible(false)}>Great</Button>
         </div>
       </Modal>
     </div>

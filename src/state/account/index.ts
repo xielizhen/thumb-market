@@ -2,6 +2,7 @@ import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
 import { IAccountRes } from 'services/api'
 import { Account, Assets, FormAsset, FormAssetProperty } from '../types'
 import { fetchAssets, fetchFormAssets, fetchUserInfo } from './fetch'
+import { cloneDeep } from 'lodash'
 
 const initialState: Account = {
   assets: {
@@ -32,7 +33,20 @@ export const accountSlice = createSlice({
       state.formAssets = action.payload
     },
     updateFormAssets: (state, action: PayloadAction<FormAssetProperty>) => {
-      console.log(action.payload)
+      const formAssets = cloneDeep(state.formAssets)
+      const asset = action.payload
+      const typeIdx = formAssets.findIndex(o => o.type === asset.type)
+      if (typeIdx > -1) {
+        const assets = formAssets[typeIdx].assets
+        const assetIdx = assets.findIndex(o => +o.id === +asset.id)
+        assetIdx > - 1 ? assets.splice(assetIdx, 1) : assets.push(asset)
+      } else {
+        formAssets.push({
+          type: asset.type,
+          assets: [asset]
+        })
+      }
+      state.formAssets = formAssets
     },
     updateUserInfo: (state, action: PayloadAction<IAccountRes>) => {
       state.userInfo = {

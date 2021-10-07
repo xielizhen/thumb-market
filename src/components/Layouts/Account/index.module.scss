@@ -3,7 +3,7 @@
   .left {
     width: 200px;
     background: #1a1a1a;
-    height: calc(100vh - 80px);
+    min-height: calc(100vh - 80px);
     .info-container {
       display: flex;
       align-items: center;

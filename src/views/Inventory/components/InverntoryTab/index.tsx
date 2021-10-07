@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
-import { Select, Button, Checkbox } from 'antd';
+import { Button, Checkbox, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
+import { FormAssetProperty } from 'state/types';
+import { InfoCircleFilled } from '@ant-design/icons';
 
 import SellModal from '../SellModal';
 import SynthesizeModal from '../SynthesizeModal';
-import styles from './index.module.scss'
-import { FormAssetProperty } from 'state/types';
+import styles from './index.module.scss';
+import { url } from 'inspector';
 
 const cx = classNames.bind(styles)
-const { Option } = Select
 
 interface IProps {
   assets: FormAssetProperty[]
 }
 const InventoryTab: React.FC<IProps> = ({ assets }) => {
-  const [checkedList, setCheckedList] = useState<string[]>()
+  const [checkedList, setCheckedList] = useState<FormAssetProperty[]>([])
 
-  const handleCheckedChange = (checked: boolean, id: string) => {
-    console.log(checked)
-    console.log(id)
+  const handleCheckedChange = (checked: boolean, asset: FormAssetProperty) => {
+    const idx = checkedList.findIndex(o => o.id === asset.id)
+    if (idx > -1) {
+      setCheckedList(checkedList.slice(0, idx).concat(checkedList.slice(idx + 1)))
+    } else {
+      setCheckedList(checkedList.concat(asset))
+    }
   }
 
   return (
     <div className={cx('inventory-tab')}>
+      {checkedList.map(o => o.id).join(',')}
       <div>
-        {/* <Select defaultValue="lucy" style={{ width: 168 }}>
-          <Option value="jack">Jack</Option>
-          <Option value="lucy">Lucy</Option>
-          <Option value="Yiminghe">yiminghe</Option>
-        </Select> */}
         <Button size="large" disabled type="primary">Synthesize</Button>
+        <Tooltip title="test">
+          <InfoCircleFilled style={{cursor: 'pointer', color: '#FFBC00', width: '22px', marginLeft: '22px'}} />
+        </Tooltip>
       </div>
       <div className={cx('panels')}>
         {
@@ -44,12 +48,12 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
                 <div className={cx('img')}>
                   <img src={tab.imgSrc} alt="" />
                 </div>
-                <Checkbox onChange={(e) => handleCheckedChange(e.target.checked, tab.id)} className={cx('inventory-checkbox')} />
+                <Checkbox onChange={(e) => handleCheckedChange(e.target.checked, tab)} className={cx('inventory-checkbox')} />
                 <div className={cx('name')}>{ }</div>
                 <Button style={{ marginTop: '14px', width: '80px' }} type="primary">sell</Button>
                 <div className={cx('attrs')}>
                   {
-                     Object.entries(attrs).map(([key, value]) => (
+                    Object.entries(attrs).map(([key, value]) => (
                       <p key={key}>{key}: {value}</p>
                     ))
                   }
