@@ -61,12 +61,15 @@ const columns = [
   }
 ];
 
-const MarketTable: React.FC = () => {
+interface IProps {
+  totalAmount: number
+}
+
+const MarketTable: React.FC<IProps> = ({ totalAmount }) => {
   return (
     <div className={cx('container')}>
       <div className={cx('info')}>
-        <div>65482 Items</div>
-        <div>latest</div>
+        <div>{totalAmount} Items</div>
       </div>
       <Table
         className='market-table'

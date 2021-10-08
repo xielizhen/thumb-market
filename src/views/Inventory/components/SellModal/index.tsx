@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Input, Button, notification } from 'antd';
 import classNames from 'classnames/bind';
 import { FormAssetProperty } from 'state/types';
-import { getStoreContract } from 'utils/contractHelpers';
+import { getBitBowNFTContract, getStoreContract } from 'utils/contractHelpers';
 import useWeb3 from 'hooks/useWeb3';
 import { useWeb3React } from '@web3-react/core';
 import BigNumber from 'bignumber.js';
 import { useAddFormAssets } from 'state/account/hooks'
 
 import styles from './index.module.scss'
+import { getBitBowStoreAddress } from 'utils/addressHelpers';
 
 const cx = classNames.bind(styles)
 
@@ -17,24 +18,31 @@ interface IProps {
   asset: FormAssetProperty,
   onCancel: () => void
 }
-const SellModal: React.FC<IProps> = ({ visible, asset, onCancel}) => {
+const SellModal: React.FC<IProps> = ({ visible, asset, onCancel }) => {
   const web3 = useWeb3()
   const { account } = useWeb3React()
   const { updateFormAssets } = useAddFormAssets()
 
-  const [ loading, setLoading ] = useState(false)
-  const [ amount, setAmount ] = useState<string | number>('')
+  const [loading, setLoading] = useState(false)
+  const [amount, setAmount] = useState<string | number>('')
+  const [isApproved, setIsApproved] = useState(false)
+  const [disabled, setDisabled] = useState(true)
 
   const handleConfirm = async () => {
     try {
       setLoading(true)
       const num = new BigNumber(amount)
+
       await getStoreContract(web3).methods.sell(Number(asset.id), num).send({
-        from: account
+        from: account,
+        gas: 500000
       })
 
       // 更新用户装备清单列表
       updateFormAssets()
+
+      // 关闭modal
+      onCancel()
     } catch (e: any) {
       notification.error({
         message: 'Error',
@@ -44,6 +52,51 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel}) => {
       setLoading(false)
     }
   }
+
+  // 获取授权金额
+  const getIsApproved = async () => {
+    if (!account) return
+    try {
+      setDisabled(true)
+      const isApproved = await getBitBowNFTContract()
+        .methods
+        .isApprovedForAll(account, getBitBowStoreAddress())
+        .call()
+      setIsApproved(isApproved)
+    } finally {
+      setDisabled(false)
+    }
+  }
+
+  // 授权
+  const handleApprove = async () => {
+    try {
+      setLoading(true)
+      await getBitBowNFTContract(web3)
+        .methods
+        .setApprovalForAll(getBitBowStoreAddress(), true)
+        .send({
+          from: account
+        })
+        .on('transactionHash', (tx) => {
+          return tx.transactionHash
+        })
+
+      await getIsApproved()
+    } catch (e: any) {
+      notification.error({
+        message: 'Error',
+        description: e?.message
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getIsApproved()
+  }, [account])
+
 
   return (
     <Modal
@@ -64,19 +117,20 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel}) => {
           price
           <Input
             className={cx('sell-input')}
-            style={{margin: '0 16px'}}
+            style={{ margin: '0 16px' }}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
           arrows
         </label>
         <Button
-          style={{marginTop: '48px'}}
+          style={{marginTop: '40px'}}
           loading={loading}
           type="primary"
-          onClick={handleConfirm}
+          disabled={disabled}
+          onClick={ isApproved ? handleConfirm : handleApprove}
         >
-          List it on market
+          { isApproved ? 'List it on market': 'Approve it' }
         </Button>
       </div>
     </Modal>
