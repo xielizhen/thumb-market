@@ -102,17 +102,20 @@ export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => 
     params: [new BigNumber(item).toNumber()]
   }))
   const propertyResults = await multicall(BitBowRepositoryAbi, propertyCalls)
-  
+
   // 数据处理
-  const res = propertyResults.reduce((acc, curr, index) => {
-    const asset = dealProperties(new BigNumber(idResults[index]).toString(), +curr.form, curr.properties) 
-    const idx = acc.findIndex(o => o.type === asset.type)
+  const sortDealResult = propertyResults
+  .map((o, index) => dealProperties(new BigNumber(idResults[index]).toString(), +o.form, o.properties))
+  .sort((a, b) => b.properties.quality - a.properties.quality)
+  
+  const res = sortDealResult.reduce((acc, curr, index) => {
+    const idx = acc.findIndex(o => o.type === curr.type)
     if (idx > -1) {
-      acc[idx].assets = acc[idx].assets.concat(asset)
+      acc[idx].assets = acc[idx].assets.concat(curr)
     } else {
       acc.push({
-        type: asset.type,
-        assets: [asset]
+        type: curr.type,
+        assets: [curr]
       })
     }
     return acc

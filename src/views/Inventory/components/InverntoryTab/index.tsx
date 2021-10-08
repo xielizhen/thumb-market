@@ -24,29 +24,24 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
   const [currentAsset, setCurrentAsset] = useState<FormAssetProperty>()
 
   const handleCheckedChange = (checked: boolean, asset: FormAssetProperty) => {
-    const isSameQualityIdx = checkedList.every(o => o.properties.quality === asset.properties.quality)
-    const idx = checkboxList.findIndex(o => o.id === asset.id)
-    const len = checkedList.length
-    if (checked) {
-      if (isSameQualityIdx && len < 3) {
-        const list = checkboxList.slice(0, idx).concat({
-          ...checkboxList[idx],
+    const quality = checkedList.length ? checkedList[0].properties.quality : asset.properties.quality
+    const isLast = !checked && checkedList.length === 1
+    const overMax = checked && checkedList.length === 2
+
+    const list = checkboxList.map((o) => {
+      if (o.id === asset.id) {
+        return {
+          ...o,
           checked: checked
-        }, checkboxList.slice(idx + 1))
-        setcheckboxList(list)
+        }
       } else {
-        notification.info({
-          message: 'Tip',
-          description: '所选装备的quality必须一致，且最多三个'
-        })
+        return {
+          ...o,
+          disabled: (!isLast && o.properties.quality !== quality) || (overMax && !o.checked)
+        }
       }
-    } else {
-      const list = checkboxList.slice(0, idx).concat({
-        ...checkboxList[idx],
-        checked: checked
-      }, checkboxList.slice(idx + 1))
-      setcheckboxList(list)
-    }
+    })
+    setcheckboxList(list)
   }
 
   const handleSellClick = (tab: FormAssetProperty) => {
@@ -65,7 +60,7 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
   useEffect(() => {
     const data: ICheckedItem[] = assets.map(o => ({
       checked: false,
-      disabled: o.properties.quality === 5,
+      disabled: o.properties.quality >= 5,
       ...o,
     }))
     setcheckboxList(data)
@@ -83,9 +78,9 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
         >
           Synthesize
         </Button>
-        <Tooltip title="内容待填充">
+        {/* <Tooltip title="内容待填充">
           <InfoCircleFilled style={{ cursor: 'pointer', color: '#FFBC00', width: '22px', marginLeft: '22px' }} />
-        </Tooltip>
+        </Tooltip> */}
       </div>
       <div className={cx('panels')}>
         {
@@ -112,7 +107,7 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
                 <div className={cx('attrs')}>
                   {
                     Object.entries(tab.displayProperties).map(([key, value]) => (
-                      <p key={key}>{key}: {value}</p>
+                      <div style={{marginTop: '8px'}} key={key}>{key}: {value}</div>
                     ))
                   }
                 </div>
