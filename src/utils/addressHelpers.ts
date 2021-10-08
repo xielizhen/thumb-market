@@ -30,3 +30,7 @@ export const getTargetAddress = () => {
 export const getMulticallAddress = () => {
   return getAddress(addresses.multiCall)
 }
+
+export const getBitBowStoreAddress = () => {
+  return getAddress(addresses.Store)
+}

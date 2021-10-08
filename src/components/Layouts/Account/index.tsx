@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import classNames from 'classnames/bind';
 import { useLocation } from "react-router-dom";
 import { useWeb3React } from '@web3-react/core';
 import Wallet from 'widgets/WalletModal';
 import { NavLink } from 'react-router-dom';
 import useAuth from 'hooks/useAuth';
-import { useAllAssets, useGetUserInfo } from 'state/account/hooks';
-import { getThumbAccount } from 'services/api';
+import { useAccount, useAllAssets, useGetUserInfo } from 'state/account/hooks';
 
 import HeadImg from 'assets/head.webp';
 import { AssetsIcon } from 'components/Svg';
@@ -16,18 +15,13 @@ import config from '../config'
 const cx = classNames.bind(styles);
 
 const Account: React.FC = ({ children }) => {
+  useAllAssets();
+  useGetUserInfo();
   const accountRoutes = config.find(o => o.href === '/account')?.items || []
   const location = useLocation();
   const { account } = useWeb3React();
   const { login, logout } = useAuth();
-  useAllAssets();
-  useGetUserInfo();
-
-  useEffect(() => {
-    if (account) {
-      getThumbAccount(account)
-    }
-  }, [account])
+  const { userInfo } = useAccount()
 
   return (
     <div className={cx('account-container')}>
@@ -37,8 +31,12 @@ const Account: React.FC = ({ children }) => {
             account ? (
               <>
                 <img className={cx('head')} src={HeadImg} />
-                <p className={cx('name')}>Tina</p>
-                <p className={cx('email')}>tina00@email.com</p>
+                <p className={cx('name')}>
+                  {userInfo.isRegister ? userInfo.name : account.slice(-8)}
+                </p>
+                {
+                  userInfo.isRegister && <p className={cx('email')}>{userInfo.username}</p>
+                }
               </>
             ) : (
               <>
@@ -65,10 +63,11 @@ const Account: React.FC = ({ children }) => {
             })
           }
         </div>
-
       </div>
       <div className={cx('right')}>
-        {children}
+        {
+          account ? (children): <div className={cx('no-account')}>Please Connect Wallet First!</div>
+        }
       </div>
     </div>
   )

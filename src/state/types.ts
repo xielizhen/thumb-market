@@ -8,7 +8,10 @@ export interface Assets {
 }
 
 export interface FormAssetProperty extends IPropertiesRule {
-  imgSrc: string
+  imgSrc: string,
+  displayProperties: {
+    [key: string]: any
+  } 
 }
 
 export interface FormAsset {

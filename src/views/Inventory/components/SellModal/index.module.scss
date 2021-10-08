@@ -6,17 +6,23 @@
     }
     .sell-input {
       background: #303030;
-      border: 1px solid #9f9f9f;
     }
   }
 }
 
 .img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 80px;
   height: 80px;
   background: linear-gradient(180deg,#585858, #414141 99%);
   border: 1px solid #1a1a1a;
   border-radius: 8px;
+  > img {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 .content {
   display: flex;

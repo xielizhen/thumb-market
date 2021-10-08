@@ -3,9 +3,12 @@ import multicall from 'utils/multicall'
 import { Assets, FormAsset, FormAssetProperty } from 'state/types'
 import { BIG_TEN } from 'utils/bigNumber'
 import UtilIcon from 'utils/icon'
+import { SortBy } from 'lodash'
 
 import erc20ABI from 'config/abi/erc20.json'
-import { getArrowAddress, getTargetAddress } from 'utils/addressHelpers'
+import BitBowNFTAbi from 'config/abi/BitBowNFT.json'
+import BitBowRepositoryAbi from 'config/abi/BitBowRepository.json'
+import { getArrowAddress, getBitBowNFTAddress, getBitBowRepositoryAddress, getTargetAddress } from 'utils/addressHelpers'
 import { getBitBowNFTContract, getBitBowRepositoryContract } from 'utils/contractHelpers'
 import { IMG_BASE_URL } from 'config'
 import { IAccountRes, getThumbAccount } from 'services/api'
@@ -19,10 +22,26 @@ export const fetchPropertiesById = async (id: string): Promise<FormAssetProperty
   // 根据id获取到该物品的属性
   const item = await getBitBowRepositoryContract().methods.get(id).call()
   // 生成用户图片
-  const property = UtilIcon.PropertyRule(id, +item.form, item.properties)
-  const url = UtilIcon.CalcIcon(+item.form, property.properties.model, property.properties.color1, property.properties.color2, property.properties.color3)
+  return dealProperties(id, +item.form, item.properties)
+}
+
+/**
+ * 规范化用户图片和属性
+ * @param account 
+ * @returns 
+ */
+export const dealProperties = (id: string, type: number, properties: string[]): FormAssetProperty => {
+  // 生成用户图片
+  const property = UtilIcon.PropertyRule(id, type, properties)
+  const url = UtilIcon.CalcIcon(type, property.properties.model, property.properties.color1, property.properties.color2, property.properties.color3)
+  const unShowAttributes = ['mode', 'color1', 'color2', 'color3']
+  const displayProperties = Object.keys(property.properties).reduce((acc, curr) => {
+    if (!unShowAttributes.includes(curr)) acc[curr] = property.properties[curr]
+    return acc
+  }, {})
   const asset = {
     ...property,
+    displayProperties,
     imgSrc: `${IMG_BASE_URL}${url}`
   }
   return asset
@@ -69,27 +88,37 @@ export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => 
   // 获取该地址名下有几个nft
   const nftNum = await getBitBowNFTContract().methods.balanceOf(account).call()
 
-  const res = []
-  for (let i = 0 ; i < +nftNum; i++) {
-    try {
-      // 根据序列号把每一个nft的id获取到
-      const id = await getBitBowNFTContract().methods.tokenOfOwnerByIndex(account, i).call()
-      // 生成properties和imgurl
-      const asset = await fetchPropertiesById(id)
-      // 生成对应数据
-      const idx = res.findIndex(o => o.type === asset.type)
-      if (idx > -1) {
-        res[idx].assets = res[idx].assets.concat(asset)
-      } else {
-        res.push({
-          type: asset.type,
-          assets: [asset]
-        })
-      }
-    } catch (err) {
-      console.error(err)
+  // 获取所有ID
+  const idCalls = new Array(+nftNum).fill(0).map((item, index) => ({
+    address: getBitBowNFTAddress(),
+    name: 'tokenOfOwnerByIndex',
+    params: [account, index],
+  }))
+  const idResults = await multicall(BitBowNFTAbi, idCalls)
+
+  // 获取所有id对应的属性
+  const propertyCalls = idResults.map((item, index) => ({
+    address: getBitBowRepositoryAddress(),
+    name: 'get',
+    params: [new BigNumber(item).toNumber()]
+  }))
+  const propertyResults = await multicall(BitBowRepositoryAbi, propertyCalls)
+  
+  // 数据处理
+  const res = propertyResults.reduce((acc, curr, index) => {
+    const asset = dealProperties(new BigNumber(idResults[index]).toString(), +curr.form, curr.properties) 
+    const idx = acc.findIndex(o => o.type === asset.type)
+    if (idx > -1) {
+      acc[idx].assets = acc[idx].assets.concat(asset)
+    } else {
+      acc.push({
+        type: asset.type,
+        assets: [asset]
+      })
     }
-  }
+    return acc
+  }, [])
+
   return res
 }
 

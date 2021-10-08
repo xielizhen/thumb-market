@@ -14,15 +14,18 @@ export const useAllAssets = () => {
   const web3 = useWeb3()
 
   useEffect(() => {
-    if (account) {
-      dispatch(fetchAssetsThunk(account))
-      dispatch(fetchFormAssetsThunk(account))
-      web3.eth.getBalance(account).then(res => {
-        dispatch(updateAssets({
-          BNBNum: new BigNumber(res).div(BIG_TEN.pow(18)).toNumber()
-        }))
-      })
-    }
+    if (!account) return
+    dispatch(fetchAssetsThunk(account))
+    dispatch(fetchFormAssetsThunk(account))
+  }, [dispatch, account])
+
+  useEffect(() => {
+    if (!account) return
+    web3.eth.getBalance(account).then(res => {
+      dispatch(updateAssets({
+        BNBNum: new BigNumber(res).div(BIG_TEN.pow(18)).toNumber()
+      }))
+    })
   }, [dispatch, account, web3])
 }
 
@@ -33,12 +36,12 @@ export const useUpdateAllAssets = () => {
 
   const updateAllAssets = useCallback(() => {
     dispatch(fetchAssetsThunk(account))
-      dispatch(fetchFormAssetsThunk(account))
-      web3.eth.getBalance(account).then(res => {
-        dispatch(updateAssets({
-          BNBNum: new BigNumber(res).div(BIG_TEN.pow(18)).toNumber()
-        }))
-      })
+    dispatch(fetchFormAssetsThunk(account))
+    web3.eth.getBalance(account).then(res => {
+      dispatch(updateAssets({
+        BNBNum: new BigNumber(res).div(BIG_TEN.pow(18)).toNumber()
+      }))
+    })
   }, [account, dispatch, web3])
 
   return { updateAllAssets }

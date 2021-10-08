@@ -9,6 +9,7 @@ import {
   getBitBowRepositoryAddress,
   getTargetAddress,
   getArrowAddress,
+  getBitBowStoreAddress,
 } from 'utils/addressHelpers'
 
 // abi
@@ -16,6 +17,7 @@ import BitBowFactoryAbi from 'config/abi/BitBowFactory.json'
 import BitBowNFTAbi from 'config/abi/BitBowNFT.json'
 import BitBowRepositoryAbi from 'config/abi/BitBowRepository.json'
 import Erc20Abi from 'config/abi/erc20.json'
+import StoreAbi from 'config/abi/BitBowStore.json'
 
 const getContract = (abi: any, address: string, web3?: Web3) => {
   const _web3 = web3 ?? web3NoAccount
@@ -40,4 +42,8 @@ export const getArrowContract = (web3?: Web3) => {
 
 export const getTargetContract = (web3?: Web3) => {
   return getContract(Erc20Abi, getTargetAddress(), web3)
+}
+
+export const getStoreContract = (web3?: Web3) => {
+  return getContract(StoreAbi, getBitBowStoreAddress(), web3)
 }

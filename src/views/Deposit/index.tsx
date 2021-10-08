@@ -18,7 +18,7 @@ const cx = classNames.bind(styles);
 
 const Deposit: React.FC = () => {
   const { account } = useWeb3React()
-  const { assets } = useAccount()
+  const { assets, userInfo } = useAccount()
   const web3 = useWeb3()
   const [ amount, setAmount ] = useState<string | number>('')
   const [ loading, setLoading ] = useState(false)
@@ -76,7 +76,7 @@ const Deposit: React.FC = () => {
           <div className={cx('title')}>Game</div>
           <div className={cx('desc')}>
             <img src={TargetIcon} alt="" />
-            <span>10 Targets</span>
+            <span>{userInfo.gold} Targets</span>
           </div>
         </div>
       </div>

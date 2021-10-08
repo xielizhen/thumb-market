@@ -37,19 +37,6 @@ const MysteryBox: React.FC = () => {
   const [isApproved, setIsApproved] = useState(false)
   const [disabled, setDisabled] = useState(true)
 
-
-  const attrs = useMemo(() => {
-    if (formAsset) {
-      const unShowAttributes = ['mode', 'color1', 'color2', 'color3']
-      const attrs = Object.keys(formAsset.properties).reduce((acc, curr) => {
-        if (!unShowAttributes.includes(curr)) acc[curr] = formAsset.properties[curr]
-        return acc
-      }, {})
-      return attrs
-    }
-    return {}
-  }, [formAsset])
-
   // 获取开盲盒所需费用
   const getMintFee = async () => {
     const fee = await getBitBowFactoryContract().methods.mintFee().call();
@@ -177,7 +164,7 @@ const MysteryBox: React.FC = () => {
             </div>
             <div className={cx('attrs')}>
               {
-                Object.entries(attrs).map(([key, value]) => (
+                Object.entries(formAsset?.displayProperties || []).map(([key, value]) => (
                   <p>{key}: {value}</p>
                 ))
               }

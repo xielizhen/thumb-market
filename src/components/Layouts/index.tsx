@@ -8,7 +8,7 @@ import logo from 'assets/logo.webp';
 
 const cx = classnames.bind(styles);
 
-const Layouts: React.FC = ({ children }) => {
+const Layouts: React.FC = ({ children }) => {  
   return (
     <Layout className={cx('layout')}>
       <header className={cx('header')}>
