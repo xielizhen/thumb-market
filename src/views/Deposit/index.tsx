@@ -27,7 +27,7 @@ const Deposit: React.FC = () => {
 
   const disabled = useMemo(() => {
     return Number(amount) <= 0
-  }, [account, amount])
+  }, [amount])
   
   const max = useMemo(() => assets.targetNum - 1, [assets.targetNum])
   

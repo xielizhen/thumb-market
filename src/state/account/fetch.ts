@@ -3,7 +3,6 @@ import multicall from 'utils/multicall'
 import { Assets, FormAsset, FormAssetProperty } from 'state/types'
 import { BIG_TEN } from 'utils/bigNumber'
 import UtilIcon from 'utils/icon'
-import { SortBy } from 'lodash'
 
 import erc20ABI from 'config/abi/erc20.json'
 import BitBowNFTAbi from 'config/abi/BitBowNFT.json'

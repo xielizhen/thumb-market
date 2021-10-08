@@ -24,8 +24,6 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
   const [currentAsset, setCurrentAsset] = useState<FormAssetProperty>()
 
   const handleCheckedChange = (checked: boolean, asset: FormAssetProperty) => {
-    console.log(checked)
-    console.log(asset)
     const isSameQualityIdx = checkedList.every(o => o.properties.quality === asset.properties.quality)
     const idx = checkboxList.findIndex(o => o.id === asset.id)
     const len = checkedList.length

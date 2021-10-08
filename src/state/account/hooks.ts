@@ -62,11 +62,9 @@ export const useUpdateAllAssets = () => {
 
 export const useUpdateFormAssets = () => {
   const dispatch = useAppDispatch()
-  const { account } = useWeb3React()
-  const web3 = useWeb3()
   const handleUpdateFormAsset = useCallback(async (asset: FormAssetProperty) => {
     dispatch(updateFormAssets(asset))
-  }, [account, dispatch, web3])
+  }, [dispatch])
 
   return { handleUpdateFormAsset }
 }

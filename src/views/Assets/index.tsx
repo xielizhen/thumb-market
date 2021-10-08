@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames/bind';
 import BigNumber from 'bignumber.js';
 import { useWeb3React } from '@web3-react/core';
-import { useAllAssets, useAccount } from 'state/account/hooks'
-import { BitBowTypeEnum, BitBowTypes } from 'utils/icon'
+import { useAccount } from 'state/account/hooks'
+import { BitBowTypes } from 'utils/icon'
 
 import TargetIcon from 'assets/target.webp';
 import ArrowsIcon from 'assets/arrows.webp';

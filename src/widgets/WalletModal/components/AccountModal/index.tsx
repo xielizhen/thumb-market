@@ -30,7 +30,7 @@ const AccountModal: React.FC<IProps> = ({ visible, onCancel, logout, onDismiss, 
     >
       <div className={cx('account')}>{account}</div>
       <div className={cx('info')}>
-        <a className={cx('view')} href={`https://bscscan.com/address/${account}`} target="_blank">
+        <a className={cx('view')} rel="noreferrer" href={`https://bscscan.com/address/${account}`} target="_blank">
           View on BscScan
           <OpenNewIcon width="20px" />
         </a>

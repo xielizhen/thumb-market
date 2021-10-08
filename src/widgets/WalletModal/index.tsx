@@ -1,13 +1,9 @@
-import React, { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
 import { Button } from 'antd';
-import classNames from 'classnames/bind';
 
-import styles from './index.module.scss';
 import { Login } from './types'
 import ConnectWallet from './components/ConnectWallet';
 import AccountModal from './components/AccountModal';
-
-const cx = classNames.bind(styles);
 
 interface IProps {
   account?: string;
