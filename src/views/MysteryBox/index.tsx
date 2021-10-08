@@ -13,7 +13,7 @@ import { useWeb3React } from '@web3-react/core';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
-import { useUpdateFormAssets } from 'state/account/hooks';
+import { useAddFormAssets } from 'state/account/hooks';
 
 const cx = classNames.bind(styles);
 const MAX_UNIT_256 = new BigNumber(2).pow(256).minus(1);
@@ -27,7 +27,7 @@ const getMysteryItem = (): BitBowItem => {
 const MysteryBox: React.FC = () => {
   const { account } = useWeb3React()
   const web3 = useWeb3();
-  const { handleUpdateFormAsset } = useUpdateFormAssets();
+  const { updateFormAssets } = useAddFormAssets();
 
   const [visible, setVisible] = useState(false)
   const [openBtnLoading, setOpenBtnLoading] = useState(false)
@@ -68,7 +68,7 @@ const MysteryBox: React.FC = () => {
       // 抽取盲盒
       const receipt = await getBitBowFactoryContract(web3)
         .methods
-        .openMysteryBox(mystery.value, !isNft)
+        .openMysteryBox(4, !isNft)
         .send({
           gas: 500000,
           from: account
@@ -89,7 +89,7 @@ const MysteryBox: React.FC = () => {
       setVisible(true)
 
       // 更新formAssets
-      handleUpdateFormAsset(asset)
+      updateFormAssets()
     } catch (e: any) {
       notification.error({
         message: 'Error',
@@ -165,7 +165,7 @@ const MysteryBox: React.FC = () => {
             <div className={cx('attrs')}>
               {
                 Object.entries(formAsset?.displayProperties || []).map(([key, value]) => (
-                  <p>{key}: {value}</p>
+                  <p key={key}>{key}: {value}</p>
                 ))
               }
             </div>

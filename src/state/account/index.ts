@@ -48,11 +48,6 @@ export const accountSlice = createSlice({
       }
       state.formAssets = formAssets
     },
-    deleteFormAssets: (state, action: PayloadAction<FormAssetProperty>) => {
-      const asset = action.payload
-      const assets = state.formAssets.find(o => o.type === asset.type)?.assets || []
-      const idx = assets.findIndex(o => +o.id === +asset.id)
-    },
     updateUserInfo: (state, action: PayloadAction<IAccountRes>) => {
       state.userInfo = {
         ...state.userInfo,

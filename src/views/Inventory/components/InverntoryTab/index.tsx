@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Tooltip } from 'antd';
+import { Button, Checkbox, notification, Tooltip } from 'antd';
 import classNames from 'classnames/bind';
 import { FormAssetProperty } from 'state/types';
 import { InfoCircleFilled } from '@ant-design/icons';
-import { sortBy } from 'lodash';
 
 import SellModal from '../SellModal';
 import SynthesizeModal from '../SynthesizeModal';
@@ -14,25 +13,42 @@ const cx = classNames.bind(styles)
 interface IProps {
   assets: FormAssetProperty[]
 }
-interface ICheckedItem {
+export interface ICheckedItem extends FormAssetProperty {
   checked: boolean,
-  id: string,
-  quality: number
+  disabled: boolean
 }
 const InventoryTab: React.FC<IProps> = ({ assets }) => {
-  // const [checkboxList, setCheckboxList] = useState<ICheckedItem[]>([])
-  const [checkedList, setCheckedList] = useState<ICheckedItem[]>([])
+  const [checkboxList, setcheckboxList] = useState<ICheckedItem[]>([])
   const [sellModalVisible, setSellModalVisible] = useState(false)
   const [syntheModalVisible, setSyntheModalVisible] = useState(false)
   const [currentAsset, setCurrentAsset] = useState<FormAssetProperty>()
 
   const handleCheckedChange = (checked: boolean, asset: FormAssetProperty) => {
-    // const idx = checkedList.findIndex(o => o.id === asset.id)
-    // if (idx > -1) {
-    //   setCheckedList(checkedList.slice(0, idx).concat(checkedList.slice(idx + 1)))
-    // } else {
-    //   setCheckedList(checkedList.concat(asset))
-    // }
+    console.log(checked)
+    console.log(asset)
+    const isSameQualityIdx = checkedList.every(o => o.properties.quality === asset.properties.quality)
+    const idx = checkboxList.findIndex(o => o.id === asset.id)
+    const len = checkedList.length
+    if (checked) {
+      if (isSameQualityIdx && len < 3) {
+        const list = checkboxList.slice(0, idx).concat({
+          ...checkboxList[idx],
+          checked: checked
+        }, checkboxList.slice(idx + 1))
+        setcheckboxList(list)
+      } else {
+        notification.info({
+          message: 'Tip',
+          description: '所选装备的quality必须一致，且最多三个'
+        })
+      }
+    } else {
+      const list = checkboxList.slice(0, idx).concat({
+        ...checkboxList[idx],
+        checked: checked
+      }, checkboxList.slice(idx + 1))
+      setcheckboxList(list)
+    }
   }
 
   const handleSellClick = (tab: FormAssetProperty) => {
@@ -40,30 +56,37 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
     setSellModalVisible(true)
   }
 
-  const syntheDisabled = useMemo(() => {
-    // const len = checkedList.length;
-    // if (len === 3 && checkedList[0].properties.quality !== 5) {
-    //   return false
-    // }
-    return true
-  }, [checkedList])
+  const handleSyntheClick = () => {
+    setSyntheModalVisible(true)
+  }
+
+  const checkedList = useMemo(() => {
+    return checkboxList.filter(o => o.checked)
+  }, [checkboxList])
 
   useEffect(() => {
     const data: ICheckedItem[] = assets.map(o => ({
       checked: false,
-      id: o.id,
-      quality: o.properties.quality
+      disabled: o.properties.quality === 5,
+      ...o,
     }))
-    setCheckedList(data)
+    setcheckboxList(data)
   }, [assets])
 
 
   return (
     <div className={cx('inventory-tab')}>
       <div>
-        <Button size="large" disabled={syntheDisabled} type="primary">Synthesize</Button>
-        <Tooltip title="test">
-          <InfoCircleFilled style={{cursor: 'pointer', color: '#FFBC00', width: '22px', marginLeft: '22px'}} />
+        <Button
+          size="large"
+          disabled={checkedList.length !== 3}
+          type="primary"
+          onClick={handleSyntheClick}
+        >
+          Synthesize
+        </Button>
+        <Tooltip title="内容待填充">
+          <InfoCircleFilled style={{ cursor: 'pointer', color: '#FFBC00', width: '22px', marginLeft: '22px' }} />
         </Tooltip>
       </div>
       <div className={cx('panels')}>
@@ -75,7 +98,8 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
                   <img src={tab.imgSrc} alt="" />
                 </div>
                 <Checkbox
-                  value={checkedList[index]}
+                  disabled={checkboxList[index]?.disabled}
+                  checked={checkboxList[index]?.checked}
                   onChange={(e) => handleCheckedChange(e.target.checked, tab)}
                   className={cx('inventory-checkbox')}
                 />
@@ -104,7 +128,11 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
         asset={currentAsset}
         onCancel={() => setSellModalVisible(false)}
       />
-      <SynthesizeModal visible={syntheModalVisible} />
+      <SynthesizeModal
+        visible={syntheModalVisible}
+        checkedList={checkedList}
+        onCancel={() => setSyntheModalVisible(false)}
+      />
     </div>
   )
 }

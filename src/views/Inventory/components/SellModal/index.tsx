@@ -5,7 +5,8 @@ import { FormAssetProperty } from 'state/types';
 import { getStoreContract } from 'utils/contractHelpers';
 import useWeb3 from 'hooks/useWeb3';
 import { useWeb3React } from '@web3-react/core';
-import BigNumber from 'bignumber.js'
+import BigNumber from 'bignumber.js';
+import { useAddFormAssets } from 'state/account/hooks'
 
 import styles from './index.module.scss'
 
@@ -19,6 +20,7 @@ interface IProps {
 const SellModal: React.FC<IProps> = ({ visible, asset, onCancel}) => {
   const web3 = useWeb3()
   const { account } = useWeb3React()
+  const { updateFormAssets } = useAddFormAssets()
 
   const [ loading, setLoading ] = useState(false)
   const [ amount, setAmount ] = useState<string | number>('')
@@ -27,10 +29,12 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel}) => {
     try {
       setLoading(true)
       const num = new BigNumber(amount)
-      const data = await getStoreContract(web3).methods.sell(Number(asset.id), num).send({
+      await getStoreContract(web3).methods.sell(Number(asset.id), num).send({
         from: account
       })
-      // 更新store中的数据列表
+
+      // 更新用户装备清单列表
+      updateFormAssets()
     } catch (e: any) {
       notification.error({
         message: 'Error',

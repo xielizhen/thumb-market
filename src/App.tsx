@@ -51,6 +51,9 @@ const App: React.FC = () => {
               <Route path="/account/deposit" exact>
                 <Deposit />
               </Route>
+              <Route path="/account" exact>
+                <Redirect to="/account/assets" />
+              </Route>
             </AccountLayout>
             <Route component={NotFound} />
           </Switch>

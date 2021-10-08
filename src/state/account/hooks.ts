@@ -29,6 +29,18 @@ export const useAllAssets = () => {
   }, [dispatch, account, web3])
 }
 
+export const useAddFormAssets = () => {
+  const dispatch = useAppDispatch()
+  const { account } = useWeb3React();
+
+  const updateFormAssets = useCallback(() => {
+    if (!account) return
+    dispatch(fetchFormAssetsThunk(account))
+  }, [dispatch, account])
+  
+  return {updateFormAssets}
+}
+
 export const useUpdateAllAssets = () => {
   const dispatch = useAppDispatch()
   const { account } = useWeb3React()
