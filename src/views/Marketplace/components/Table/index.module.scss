@@ -8,5 +8,30 @@
     justify-content: space-between;
     height: 60px;
     border-bottom: 1px solid #d6d6d6;
+    font-size: 24px;
+    color: #fff;
+  }
+}
+
+:global {
+  .market-table {
+    .ant-table-thead {
+      tr {
+        th {
+          // border-bottom: 1px solid #9f9f9f;
+          border-bottom: 0;
+          &::before {
+            display: none;
+          }
+        }
+      }
+    }
+    .ant-table-tbody {
+      tr {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
   }
 }

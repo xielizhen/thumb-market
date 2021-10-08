@@ -65,10 +65,11 @@ const MarketTable: React.FC = () => {
   return (
     <div className={cx('container')}>
       <div className={cx('info')}>
-        <div>65482 Bows</div>
+        <div>65482 Items</div>
         <div>latest</div>
       </div>
       <Table
+        className='market-table'
         style={{marginTop: '30px'}}
         dataSource={dataSource}
         columns={columns}

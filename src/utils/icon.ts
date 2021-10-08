@@ -25,6 +25,29 @@ export interface BitBowItem {
   imgSrc: string
 }
 
+export const QualityTypes = [
+  {
+    label: 'Normal',
+    value: 1
+  },
+  {
+    label: 'Rare',
+    value: 2
+  },
+  {
+    label: 'Super Rare',
+    value: 3
+  },
+  {
+    label: 'Super Super Rare',
+    value: 4
+  },
+  {
+    label: 'Ultra Rare',
+    value: 5
+  }
+]
+
 export const BitBowTypes: BitBowItem[] = [
   {
     label: 'Bow',

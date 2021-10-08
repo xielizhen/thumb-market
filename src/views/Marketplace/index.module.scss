@@ -1,3 +1,17 @@
-.container {
-  display: flex;
+.market-container {
+  :global {
+    .ant-tabs {
+      .ant-tabs-nav {
+        background-color: #2e2e2e;
+        border-top: 1px solid #9f9f9f;
+        margin: 0;
+        &:before {
+          display: none;
+        }
+      }
+    }
+  }
+  .container {
+    display: flex;
+  }
 }

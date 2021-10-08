@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import classNames from 'classnames/bind';
+import { BitBowTypes } from 'utils/icon'
 
 import Filter from './components/Filter';
 import MarketTable from './components/Table';
@@ -10,35 +11,21 @@ const cx = classNames.bind(styles);
 
 const { TabPane } = Tabs;
 
-const tabList = [
-  {
-    label: 'Bows',
-  },
-  {
-    label: 'Peep Sights'
-  },
-  {
-    label: 'Arrows'
-  },
-  {
-    label: 'Armguards'
-  }
-]
-
 const Marketplace: React.FC = () => {
   return (
-    <Tabs defaultActiveKey={tabList[0].label} centered>
-      {
-        tabList.map((tab) => (
-          <TabPane tab={tab.label} key={tab.label}>
-            <div className={cx('container')}>
-              <Filter />
-              <MarketTable />
-            </div>
-          </TabPane>
-        ))
-      }
-    </Tabs>
+    <div className={cx('market-container')}>
+      <Tabs defaultActiveKey={BitBowTypes[0].label} centered>
+        {
+          BitBowTypes.map((tab) => (
+            <TabPane tab={`${tab.label}s`} key={tab.label} />
+          ))
+        }
+      </Tabs>
+      <div className={cx('container')}>
+        <Filter />
+        <MarketTable />
+      </div>
+    </div>
   )
 }
 
