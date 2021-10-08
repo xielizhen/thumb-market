@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, notification } from 'antd';
 import classNames from 'classnames/bind';
-import BigNumber from 'bignumber.js';
-
-import styles from './index.module.scss';
-import giftImg from 'assets/gift.webp'
 import { BitBowTypes, BitBowItem } from 'utils/icon';
 import moment from 'moment';
 import { getBitBowFactoryContract, getBitBowNFTContract, getArrowContract } from 'utils/contractHelpers'
@@ -14,9 +10,13 @@ import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { useAddFormAssets } from 'state/account/hooks';
+import { MAX_UNIT_256 } from 'config'
+
+import styles from './index.module.scss';
+import giftImg from 'assets/gift.webp'
+
 
 const cx = classNames.bind(styles);
-const MAX_UNIT_256 = new BigNumber(2).pow(256).minus(1);
 
 const getMysteryItem = (): BitBowItem => {
   const currentWeek = moment().week();
@@ -68,7 +68,7 @@ const MysteryBox: React.FC = () => {
       // 抽取盲盒
       const receipt = await getBitBowFactoryContract(web3)
         .methods
-        .openMysteryBox(4, !isNft)
+        .openMysteryBox(mystery.value, !isNft)
         .send({
           gas: 500000,
           from: account

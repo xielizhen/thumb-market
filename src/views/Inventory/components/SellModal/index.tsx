@@ -124,7 +124,7 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel }) => {
           arrows
         </label>
         <Button
-          style={{marginTop: '40px'}}
+          style={{marginTop: '48px'}}
           loading={loading}
           type="primary"
           disabled={disabled}

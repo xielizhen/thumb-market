@@ -7,6 +7,7 @@ import { InfoCircleFilled } from '@ant-design/icons';
 import SellModal from '../SellModal';
 import SynthesizeModal from '../SynthesizeModal';
 import styles from './index.module.scss';
+import { useAddFormAssets } from 'state/account/hooks';
 
 const cx = classNames.bind(styles)
 
@@ -18,6 +19,7 @@ export interface ICheckedItem extends FormAssetProperty {
   disabled: boolean
 }
 const InventoryTab: React.FC<IProps> = ({ assets }) => {
+  const { updateFormAssets } = useAddFormAssets();
   const [checkboxList, setcheckboxList] = useState<ICheckedItem[]>([])
   const [sellModalVisible, setSellModalVisible] = useState(false)
   const [syntheModalVisible, setSyntheModalVisible] = useState(false)
@@ -124,7 +126,10 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
       <SynthesizeModal
         visible={syntheModalVisible}
         checkedList={checkedList}
-        onCancel={() => setSyntheModalVisible(false)}
+        onCancel={() => {
+          setSyntheModalVisible(false)
+          updateFormAssets()
+        }}
       />
     </div>
   )
