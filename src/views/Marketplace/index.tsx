@@ -28,7 +28,8 @@ const Marketplace: React.FC = () => {
 
   return (
     <div className={cx('market-container')}>
-      <Tabs defaultActiveKey={BitBowTypes[0].label} centered>
+      MarketPlace
+      {/* <Tabs defaultActiveKey={BitBowTypes[0].label} centered>
         {
           BitBowTypes.map((tab) => (
             <TabPane tab={`${tab.label}s`} key={tab.label} />
@@ -38,7 +39,7 @@ const Marketplace: React.FC = () => {
       <div className={cx('container')}>
         <Filter />
         <MarketTable totalAmount={totalAmount} />
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -156,6 +156,7 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
 
   useEffect(() => {
     getTargetAmount()
+    setSyntheStatus(Synthe.UNKOWN)
   }, [checkedList])
 
   return (
@@ -212,7 +213,7 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
             </div>
           )
         }
-        {Synthe.SUCCESS ?
+        {syntheStatus === Synthe.SUCCESS ?
           <Button 
             style={{ marginTop: '48px' }}
             type="primary"
