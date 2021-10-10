@@ -2,10 +2,10 @@ import { MenuEntry } from './Menu/types';
 import { AssetsIcon, InventoryIcon, MysteryIcon, DespoitIcon } from 'components/Svg'
 
 const config: MenuEntry[] = [
-  {
-    label: 'Dashboard',
-    href: '/',
-  },
+  // {
+  //   label: 'Dashboard',
+  //   href: '/',
+  // },
   {
     label: 'Marketplace',
     href: '/market',

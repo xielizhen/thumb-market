@@ -200,7 +200,11 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
         </div>
         <div className={cx('divider')}></div>
         <div className={cx('img')}>
-          <img src={SyntheOptions[syntheStatus]} alt="" />
+          {
+            syntheStatus === Synthe.SUCCESS
+              ? <img src={currentAsset?.imgSrc} />
+              : <img src={SyntheOptions[syntheStatus]} alt="" />
+          }
         </div>
         {
           syntheStatus === Synthe.SUCCESS && (

@@ -12,10 +12,18 @@
     line-height: 80px;
     padding: 0 50px;
     background: $dark-background-color;
-    color: $active-text-color
-  }
-  .logo {
-    color: $primary-color;
-    width: 120px;
+    color: $active-text-color;
+    .logo-container {
+      display: flex;
+      align-items: center;
+      .logo {
+        color: $primary-color;
+        width: 120px;
+      }
+    }
+    .right {
+      display: flex;
+      align-items: center;
+    }
   }
 }

@@ -2,7 +2,6 @@ import React, { lazy } from 'react';
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import BigNumber from 'bignumber.js'
 import Layout from 'components/Layouts'
-import AccountLayout from 'components/Layouts/Account'
 import SuspenseWithChunkError from 'components/SuspenseWithChunkError'
 import useEagerConnect from 'hooks/useEagerConnect'
 import { Spin } from 'antd';
@@ -26,35 +25,36 @@ BigNumber.config({
 
 const App: React.FC = () => {
   useEagerConnect()
-  
+
   return (
     <Router history={history}>
       <Layout>
         <SuspenseWithChunkError fallback={<Spin />}>
           <Switch>
-            <Route path="/" exact>
-              <Dashboard />
-            </Route>
             <Route path="/market" exact>
               <Marketplace />
             </Route>
-            <AccountLayout>
-              <Route path="/account/assets" exact>
-                <AccountAssets />
-              </Route>
-              <Route path="/account/inventory" exact>
-                <Inventory />
-              </Route>
-              <Route path="/account/mystery" exact>
-                <MysteryBox />
-              </Route>
-              <Route path="/account/deposit" exact>
-                <Deposit />
-              </Route>
-              <Route path="/account" exact>
-                <Redirect to="/account/assets" />
-              </Route>
-            </AccountLayout>
+            <Route path="/account/assets" exact>
+              <AccountAssets />
+            </Route>
+            <Route path="/account/inventory" exact>
+              <Inventory />
+            </Route>
+            <Route path="/account/mystery" exact>
+              <MysteryBox />
+            </Route>
+            <Route path="/account/deposit" exact>
+              <Deposit />
+            </Route>
+
+            {/* redirects */}
+            <Route path="/" exact>
+              <Redirect to="/market" />
+            </Route>
+            <Route path="/account" exact>
+              <Redirect to="/account/assets" />
+            </Route>
+
             <Route component={NotFound} />
           </Switch>
         </SuspenseWithChunkError>
