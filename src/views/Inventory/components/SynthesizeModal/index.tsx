@@ -52,7 +52,7 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
     const nftList = Object.entries(events).filter(([_, item]) => item.address === getBitBowNFTAddress())
     if (!nftList.length) return undefined
     const topics = nftList[nftList.length - 1][1].raw.topics
-    return parseInt(topics[topics.length - 1], 16)
+    return web3.utils.hexToNumber(topics[topics.length - 1])
   }
 
   const handleConfirm = async () => {
@@ -115,12 +115,13 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
 
   // 授权
   const handleApprove = async () => {
+    const amount = web3.utils.toHex(MAX_UNIT_256.toString())
     try {
       setLoading(true)
       // target授权factory
       await getTargetContract(web3)
         .methods
-        .approve(getBitBowFactoryAddress(), MAX_UNIT_256)
+        .approve(getBitBowFactoryAddress(), amount)
         .send({
           from: account
         })

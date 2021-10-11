@@ -31,9 +31,8 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel }) => {
   const handleConfirm = async () => {
     try {
       setLoading(true)
-      const num = new BigNumber(amount)
 
-      await getStoreContract(web3).methods.sell(Number(asset.id), num).send({
+      await getStoreContract(web3).methods.sell(Number(asset.id), web3.utils.toHex(amount)).send({
         from: account,
         gas: 500000
       })

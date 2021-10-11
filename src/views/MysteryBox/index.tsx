@@ -79,7 +79,7 @@ const MysteryBox: React.FC = () => {
         const event = events[key]
         if (event.address === getBitBowNFTAddress()) {
           const topics = event.raw.topics
-          id = parseInt(topics[topics.length - 1], 16)
+          id = web3.utils.hexToNumber(topics[topics.length - 1])
         }
       }
 
@@ -102,11 +102,12 @@ const MysteryBox: React.FC = () => {
 
   // 授权
   const handleApprove = async () => {
+    const amount = web3.utils.toHex(MAX_UNIT_256.toString())
     try {
       setOpenBtnLoading(true)
       await getArrowContract(web3)
         .methods
-        .approve(getBitBowFactoryAddress(), MAX_UNIT_256)
+        .approve(getBitBowFactoryAddress(), amount)
         .send({
           from: account
         })

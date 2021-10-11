@@ -6,10 +6,6 @@ import { QualityTypes } from 'utils/icon'
 import styles from './index.module.scss';
 
 const cx = classNames.bind(styles);
-const options = [
-  { label: 'For Sale', value: 'Apple' },
-  { label: 'Not for Sale', value: 'Pear' }
-];
 
 const Filter: React.FC = () => {
   const handleCheckboxChange = () => {
@@ -43,7 +39,7 @@ const Filter: React.FC = () => {
         <div className={cx('sub-title')}>Draw Speed</div>
         <Slider min={1} max={31} range />
       </div>
-      <div className={cx('checkbox')}>
+      {/* <div className={cx('checkbox')}>
       <div className={cx('title')}>Status</div>
         <Checkbox.Group
           className='market-filter-checkbox'
@@ -51,7 +47,7 @@ const Filter: React.FC = () => {
           defaultValue={['Apple']}
           onChange={handleCheckboxChange}
         />
-      </div>
+      </div> */}
     </div>
   )
 }

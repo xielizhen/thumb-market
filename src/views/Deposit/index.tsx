@@ -5,9 +5,7 @@ import classNames from "classnames/bind";
 import { useAccount, useUpdateAllAssets, useUpdateUserInfo } from "state/account/hooks";
 import { useWeb3React } from "@web3-react/core";
 import { getTargetContract } from 'utils/contractHelpers'
-import BigNumber from 'bignumber.js'
 import useWeb3 from "hooks/useWeb3";
-import { BIG_TEN } from "utils/bigNumber";
 import { GAME_ADDRESS } from "config";
 
 import TargetIcon from 'assets/target.webp';
@@ -43,7 +41,6 @@ const Deposit: React.FC = () => {
 
   const handleTransfer = async () => {
     const num = web3.utils.toWei(String(amount), 'ether');
-    // const num = new BigNumber(amount).multipliedBy(BIG_TEN.pow(18))
     try {
       setLoading(true)
       await getTargetContract(web3).methods.transfer(GAME_ADDRESS, num).send({
