@@ -2,7 +2,6 @@ import React from 'react';
 import { Layout, Button } from 'antd';
 import classnames from 'classnames/bind';
 import { useLocation } from 'react-router';
-import { useAllAssets, useGetUserInfo } from 'state/account/hooks';
 
 import Menu from './Menu';
 import AccountLayout from './Account';
@@ -12,8 +11,6 @@ import logo from 'assets/logo.webp';
 const cx = classnames.bind(styles);
 
 const Layouts: React.FC = ({ children }) => {
-  useAllAssets();
-  useGetUserInfo();
   const location = useLocation();
   
   return (

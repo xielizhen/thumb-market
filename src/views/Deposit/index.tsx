@@ -29,7 +29,9 @@ const Deposit: React.FC = () => {
     return Number(amount) <= 0
   }, [amount])
   
-  const max = useMemo(() => assets.targetNum - 1, [assets.targetNum])
+  const max = useMemo(() => {
+    return  assets.targetNum > 1 ? assets.targetNum - 1 : 0
+  }, [assets.targetNum])
   
   const handleNumChange = (e) => {
     const val = parseFloat(e.target.value)
@@ -40,7 +42,8 @@ const Deposit: React.FC = () => {
   }
 
   const handleTransfer = async () => {
-    const num = new BigNumber(amount).multipliedBy(BIG_TEN.pow(18))
+    const num = web3.utils.toWei(String(amount), 'ether');
+    // const num = new BigNumber(amount).multipliedBy(BIG_TEN.pow(18))
     try {
       setLoading(true)
       await getTargetContract(web3).methods.transfer(GAME_ADDRESS, num).send({

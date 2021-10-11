@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Tabs } from 'antd';
 import classNames from 'classnames/bind';
 import { BitBowTypes } from 'utils/icon';
-import { getBitBowNFTContract } from 'utils/contractHelpers';
-import { getBitBowStoreAddress } from 'utils/addressHelpers';
-
+import { useMarket, useTotalAmount, useAddStoreList } from 'state/market/hooks';
 
 import Filter from './components/Filter';
 import MarketTable from './components/Table';
@@ -15,29 +13,32 @@ const cx = classNames.bind(styles);
 const { TabPane } = Tabs;
 
 const Marketplace: React.FC = () => {
-  const [totalAmount, setTotalAmount] = useState(0)
+  useTotalAmount();
+  useAddStoreList();
+  const { storeList } = useMarket();
 
-  const getTotalItems = async () => {
-    const data = await getBitBowNFTContract().methods.balanceOf(getBitBowStoreAddress()).call()
-    setTotalAmount(data)
+  const [activeKey, setActiveKey] = useState(String(BitBowTypes[0].value))
+
+  const handleTabChange = (val: string) => {
+    setActiveKey(val)
   }
 
-  useEffect(() => {
-    getTotalItems()
-  }, [])
+  const assets = useMemo(() => {
+    return storeList.filter(o => +o.type === +activeKey)
+  }, [storeList, activeKey])
 
   return (
     <div className={cx('market-container')}>
-      <Tabs defaultActiveKey={BitBowTypes[0].label} centered>
+      <Tabs centered activeKey={String(activeKey)} onChange={handleTabChange}>
         {
           BitBowTypes.map((tab) => (
-            <TabPane tab={`${tab.label}s`} key={tab.label} />
+            <TabPane tab={`${tab.label}s`} key={tab.value} />
           ))
         }
       </Tabs>
       <div className={cx('container')}>
         <Filter />
-        <MarketTable totalAmount={totalAmount} />
+        <MarketTable assets={assets}  />
       </div>
     </div>
   )

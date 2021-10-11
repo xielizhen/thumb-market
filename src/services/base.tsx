@@ -4,12 +4,16 @@ import axios from 'axios';
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
   timeout: 30000,
-  withCredentials: true
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest'
+  },
+  // withCredentials: true
 });
 
 axiosInstance.interceptors.request.use(
   function (config) {
     // TODO: 添加自定义config
+    console.log(config)
     return config;
   },
   function (error) {

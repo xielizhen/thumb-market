@@ -1,55 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { Table, Button } from 'antd';
+import { StoreAsset } from 'state/types';
+import { useMarket, useAddStoreListCb } from 'state/market/hooks';
 import classNames from 'classnames/bind';
+import { debounce } from 'lodash'
+
+import ImgContainer from 'components/ImgContainer';
 
 import styles from './index.module.scss';
-import { Table, Button } from 'antd';
 
 const cx = classNames.bind(styles);
 
-const dataSource = [
-  {
-    key: '1',
-    name: '胡彦斌',
-    age: 32,
-    address: '西湖区湖底公园1号',
-  },
-  {
-    key: '2',
-    name: '胡彦祖',
-    age: 42,
-    address: '西湖区湖底公园1号',
-  },
-];
-
-const columns = [
+const beforeColumns = [
   {
     title: '',
-    dataIndex: 'name',
-    key: 'name',
-  },
+    dataIndex: 'imgSrc',
+    key: 'imgSrc',
+    render: (imgSrc: string) => {
+      return <ImgContainer imgSrc={imgSrc} />
+    }
+  }
+]
+
+const afterColumns = [
   {
-    title: 'Name',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Quality',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Weight',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Stability',
-  },
-  {
-    title: 'Draw Speed'
-  },
-  {
-    title: 'Price'
+    title: 'Price',
+    dataIndex: 'price',
+    render: (price: string) => {
+      return <span>{price} BNB</span>
+    }
   },
   {
     title: '',
@@ -59,13 +38,28 @@ const columns = [
       )
     }
   }
-];
+]
 
 interface IProps {
-  totalAmount: number
+  assets: StoreAsset[]
 }
 
-const MarketTable: React.FC<IProps> = ({ totalAmount }) => {
+const MarketTable: React.FC<IProps> = ({ assets }) => {
+  const { totalAmount, storeList } = useMarket();
+  const { getStoreList } = useAddStoreListCb();
+
+  const selfColumns = Object.entries((assets[0]?.displayProperties || [])).map(([key, value]) => ({
+    title: key.substring(0, 1).toUpperCase().concat(key.slice(1)),
+    dataIndex: key,
+    render: (_, source: StoreAsset) => {
+      return source?.displayProperties[key]
+    }
+  }))
+
+  const columns = useMemo(() => {
+    return assets.length ? [...beforeColumns, ...selfColumns, ...afterColumns]: []
+  }, [assets])
+
   return (
     <div className={cx('container')}>
       <div className={cx('info')}>
@@ -74,9 +68,26 @@ const MarketTable: React.FC<IProps> = ({ totalAmount }) => {
       <Table
         className='market-table'
         style={{marginTop: '30px'}}
-        dataSource={dataSource}
+        dataSource={assets}
         columns={columns}
+        pagination={false}
+        rowKey='id'
       />
+      <div className={cx('btn-container')}>
+        {
+          storeList.length === totalAmount ? (
+            <div>no more data</div>
+          ): (
+            <Button
+              type="primary"
+              ghost
+              onClick={debounce(getStoreList, 1000)}
+            >
+              Show more
+            </Button>
+          )
+        }
+      </div>
     </div>
   )
 }

@@ -9,7 +9,7 @@ import BitBowNFTAbi from 'config/abi/BitBowNFT.json'
 import BitBowRepositoryAbi from 'config/abi/BitBowRepository.json'
 import { getArrowAddress, getBitBowNFTAddress, getBitBowRepositoryAddress, getTargetAddress } from 'utils/addressHelpers'
 import { getBitBowNFTContract, getBitBowRepositoryContract } from 'utils/contractHelpers'
-import { IMG_BASE_URL } from 'config'
+import { FETCH_STEP, IMG_BASE_URL } from 'config'
 import { IAccountRes, getThumbAccount } from 'services/api'
 
 /**
@@ -44,6 +44,39 @@ export const dealProperties = (id: string, type: number, properties: string[]): 
     imgSrc: `${IMG_BASE_URL}${url}`
   }
   return asset
+}
+
+export const getPropertiesByIds = async (
+  account: string,
+  beginStart: number = 0,
+  endStart: number = FETCH_STEP
+): Promise<FormAssetProperty[]> => {
+  // console.log(beginStart)
+  // console.log(endStart)
+  // 获取所有ID
+  const idCalls = new Array(endStart - beginStart).fill(0).map((item, index) => ({
+    address: getBitBowNFTAddress(),
+    name: 'tokenOfOwnerByIndex',
+    params: [account, index+beginStart],
+  }))
+  const idResults = await multicall(BitBowNFTAbi, idCalls)
+
+  // console.log(idResults)
+
+  // 获取所有id对应的属性
+  const propertyCalls = idResults.map((item, index) => ({
+    address: getBitBowRepositoryAddress(),
+    name: 'get',
+    params: [new BigNumber(item).toNumber()]
+  }))
+  const propertyResults = await multicall(BitBowRepositoryAbi, propertyCalls)
+
+  // 数据处理
+  const sortDealResult = propertyResults
+  .map((o, index) => dealProperties(new BigNumber(idResults[index]).toString(), +o.form, o.properties))
+  .sort((a, b) => b.properties.quality - a.properties.quality)
+
+  return sortDealResult
 }
 
 /**
@@ -86,29 +119,9 @@ export const fetchAssets = async (account: string): Promise<Assets> => {
 export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => {
   // 获取该地址名下有几个nft
   const nftNum = await getBitBowNFTContract().methods.balanceOf(account).call()
+  const data = await getPropertiesByIds(account, 0, +nftNum)
 
-  // 获取所有ID
-  const idCalls = new Array(+nftNum).fill(0).map((item, index) => ({
-    address: getBitBowNFTAddress(),
-    name: 'tokenOfOwnerByIndex',
-    params: [account, index],
-  }))
-  const idResults = await multicall(BitBowNFTAbi, idCalls)
-
-  // 获取所有id对应的属性
-  const propertyCalls = idResults.map((item, index) => ({
-    address: getBitBowRepositoryAddress(),
-    name: 'get',
-    params: [new BigNumber(item).toNumber()]
-  }))
-  const propertyResults = await multicall(BitBowRepositoryAbi, propertyCalls)
-
-  // 数据处理
-  const sortDealResult = propertyResults
-  .map((o, index) => dealProperties(new BigNumber(idResults[index]).toString(), +o.form, o.properties))
-  .sort((a, b) => b.properties.quality - a.properties.quality)
-  
-  const res = sortDealResult.reduce((acc, curr, index) => {
+  const res = data.reduce((acc, curr, index) => {
     const idx = acc.findIndex(o => o.type === curr.type)
     if (idx > -1) {
       acc[idx].assets = acc[idx].assets.concat(curr)
@@ -123,6 +136,7 @@ export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => 
 
   return res
 }
+
 
 
 export const fetchUserInfo = async (account: string): Promise<IAccountRes> => {

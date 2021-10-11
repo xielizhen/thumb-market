@@ -19,6 +19,12 @@ export interface FormAsset {
   assets: FormAssetProperty[]
 }
 
+export interface StoreAsset extends FormAssetProperty {
+  price: number,
+  owner: string
+}
+
+
 // account
 export type Account = {
   assets: Assets,
@@ -26,6 +32,14 @@ export type Account = {
   userInfo: IAccountRes
 }
 
+// market
+export type Market = {
+  totalAmount: number,
+  currentAmount: number,
+  storeList: StoreAsset[]
+}
+
 export interface State {
+  market: any
   account: Account
 }
