@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, notification, Tooltip } from 'antd';
+import { Button, Checkbox } from 'antd';
 import classNames from 'classnames/bind';
 import { FormAssetProperty } from 'state/types';
-import { InfoCircleFilled } from '@ant-design/icons';
+import { useAddFormAssets } from 'state/account/hooks';
+import ImgContainer from 'components/ImgContainer';
 
 import SellModal from '../SellModal';
 import SynthesizeModal from '../SynthesizeModal';
 import styles from './index.module.scss';
-import { useAddFormAssets } from 'state/account/hooks';
 
 const cx = classNames.bind(styles)
 
@@ -80,26 +80,25 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
         >
           Synthesize
         </Button>
-        {/* <Tooltip title="内容待填充">
-          <InfoCircleFilled style={{ cursor: 'pointer', color: '#FFBC00', width: '22px', marginLeft: '22px' }} />
-        </Tooltip> */}
       </div>
       <div className={cx('panels')}>
         {
           assets.map((tab, index) => {
             return (
               <div className={cx('panel')} key={tab.id}>
-                <div className={cx('img')}>
-                  <img src={tab.imgSrc} alt="" />
-                </div>
+                <ImgContainer
+                  imgSrc={tab.imgSrc}
+                  containerStyle={{width: '160px', height: '160px'}}
+                />
                 <Checkbox
+                  style={{marginTop: '14px'}}
                   disabled={checkboxList[index]?.disabled}
                   checked={checkboxList[index]?.checked}
                   onChange={(e) => handleCheckedChange(e.target.checked, tab)}
                   className={cx('inventory-checkbox')}
                 />
-                <div className={cx('name')}>{ }</div>
                 <Button
+                  size="large"
                   style={{ marginTop: '14px', width: '80px' }}
                   type="primary"
                   onClick={() => handleSellClick(tab)}
@@ -109,7 +108,7 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
                 <div className={cx('attrs')}>
                   {
                     Object.entries(tab.displayProperties).map(([key, value]) => (
-                      <div style={{marginTop: '8px'}} key={key}>{key}: {value}</div>
+                      <div style={{marginTop: '8px'}} key={key}>{key}： {value}</div>
                     ))
                   }
                 </div>

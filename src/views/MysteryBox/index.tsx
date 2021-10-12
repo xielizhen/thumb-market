@@ -11,6 +11,7 @@ import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { useAddFormAssets } from 'state/account/hooks';
 import { useSafeState } from 'ahooks'
+import ImgContainer from 'components/ImgContainer';
 
 import styles from './index.module.scss';
 import giftImg from 'assets/gift.webp'
@@ -122,9 +123,7 @@ const MysteryBox: React.FC = () => {
         <div className={cx('modal-content')}>
           <div className={cx('info')}>You got a {BitBowTypes.find(o => o.value === formAsset?.type)?.label} from the blind box</div>
           <div className={cx('detail')}>
-            <div className={cx('img')}>
-              <img src={formAsset?.imgSrc} alt="" />
-            </div>
+            <ImgContainer imgSrc={formAsset?.imgSrc} />
             <div className={cx('attrs')}>
               {
                 Object.entries(formAsset?.displayProperties || []).map(([key, value]) => (

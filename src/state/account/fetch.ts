@@ -42,7 +42,7 @@ export const dealProperties = (id: string, type: number, properties: string[]): 
   // 生成用户图片
   const property = UtilIcon.PropertyRule(id, type, properties)
   const url = UtilIcon.CalcIcon(type, property.properties.model, property.properties.color1, property.properties.color2, property.properties.color3)
-  const unShowAttributes = ['mode', 'color1', 'color2', 'color3']
+  const unShowAttributes = ['model', 'color1', 'color2', 'color3']
   const displayProperties = Object.keys(property.properties).reduce((acc, curr) => {
     if (!unShowAttributes.includes(curr)) acc[curr] = property.properties[curr]
     return acc

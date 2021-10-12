@@ -9,6 +9,7 @@ import useFactoryApproveArrow from 'hooks/useArrowApproveFactory';
 import { getBitBowFactoryContract } from 'utils/contractHelpers';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchClubCount } from 'state/account/fetch';
+import ImgContainer from 'components/ImgContainer';
 
 import TargetIcon from 'assets/target.webp';
 import ArrowsIcon from 'assets/arrows.webp';
@@ -68,21 +69,15 @@ const AccountAssets: React.FC = () => {
       </div>
       <div className={cx('panels')}>
         <div className={cx('panel')}>
-          <div className={cx('img')}>
-            <img src={ArrowsIcon} alt="" />
-          </div>
+          <ImgContainer imgSrc={ArrowsIcon} />
           <div className={cx('name')}>{assets.arrowNum} Arrows</div>
         </div>
         <div className={cx('panel')}>
-          <div className={cx('img')}>
-            <img src={TargetIcon} alt="" />
-          </div>
+        <ImgContainer imgSrc={TargetIcon} />
           <div className={cx('name')}>{assets.targetNum} Targets</div>
         </div>
         <div className={cx('panel')}>
-          <div className={cx('img')}>
-            <img src={BnbIcon} alt="" />
-          </div>
+          <ImgContainer imgSrc={BnbIcon} />
           <div className={cx('name')}>{new BigNumber(assets.BNBNum).toFixed(3)} BNB</div>
         </div>
       </div>
@@ -91,9 +86,7 @@ const AccountAssets: React.FC = () => {
         {
           BitBowTypes.map((item) => (
             <div className={cx('panel')} key={item.value}>
-              <div className={cx('img')}>
-                <img src={item.imgSrc} alt="" />
-              </div>
+              <ImgContainer imgSrc={item.imgSrc} />
               <div className={cx('name')}>
                 {formAssets.find(o => o.type === item.value)?.assets.length || 0} {item.label}s
               </div>
@@ -104,6 +97,7 @@ const AccountAssets: React.FC = () => {
       <div style={{marginTop: '50px'}}>
         Club Count：{clubCount}
         <Button
+          size="large"
           loading={loading}
           disabled={disabled}
           style={{marginLeft: '20px'}}

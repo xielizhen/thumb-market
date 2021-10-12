@@ -7,6 +7,7 @@ import useWeb3 from 'hooks/useWeb3';
 import { useWeb3React } from '@web3-react/core';
 import { useAddFormAssets } from 'state/account/hooks'
 import { useSafeState } from 'ahooks'
+import ImgContainer from 'components/ImgContainer';
 
 import styles from './index.module.scss'
 import { getBitBowStoreAddress } from 'utils/addressHelpers';
@@ -109,9 +110,7 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel }) => {
       cancelText="取消"
     >
       <div className={cx('content')}>
-        <div className={cx('img')}>
-          <img src={asset?.imgSrc} alt="" />
-        </div>
+        <ImgContainer imgSrc={asset?.imgSrc} />
         <label className={cx('input')}>
           price
           <Input

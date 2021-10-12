@@ -9,6 +9,7 @@ import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { MAX_UNIT_256 } from 'config';
 import { useSafeState } from 'ahooks'
+import ImgContainer from 'components/ImgContainer';
 
 import TargetIcon from 'assets/target.webp';
 import UnkownIcon from 'assets/unkown.webp';
@@ -178,16 +179,17 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
           {
             checkedList.map((item) => (
               <div className={cx('panel')} key={item.id}>
-                <div className={cx('img')}>
-                  <img src={item.imgSrc} alt="" />
-                </div>
+                <ImgContainer
+                  imgSrc={item.imgSrc}
+                />
               </div>
             ))
           }
           <div className={cx('panel')}>
-            <div className={cx('img')}>
-              <img className={cx('target-img')} src={TargetIcon} alt="" />
-            </div>
+            <ImgContainer
+              imgSrc={TargetIcon}
+              imgStyle={{width: '40px'}}
+            />
             <div className={cx('text')}>{targetAmount} Targets</div>
           </div>
         </div>
@@ -201,13 +203,12 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
           </div>
         </div>
         <div className={cx('divider')}></div>
-        <div className={cx('img')}>
-          {
-            syntheStatus === Synthe.SUCCESS
-              ? <img src={currentAsset?.imgSrc} />
-              : <img src={SyntheOptions[syntheStatus]} alt="" />
+        <ImgContainer
+          imgSrc={syntheStatus === Synthe.SUCCESS 
+            ? currentAsset?.imgSrc
+            : SyntheOptions[syntheStatus]
           }
-        </div>
+        />
         {
           syntheStatus === Synthe.SUCCESS && (
             <div className={cx('attrs')}>

@@ -21,19 +21,6 @@
       &:last-child {
         margin-right: 0;
       }
-      .img {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(180deg,#585858, #414141 99%);
-        border: 1px solid #1a1a1a;
-        border-radius: 8px;
-        > img {
-          width: 48px;
-        }
-      }
       .name {
         margin-top: 14px;
         font-size: 14px;

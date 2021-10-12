@@ -32,7 +32,7 @@ const Layouts: React.FC = ({ children }) => {
         <Button
           style={{marginLeft: '10px'}}
           type="primary"
-          href="http://cloud.bitbow.net/web/index.html"
+          href="https://cloud.bitbow.net/web/index.html"
           target="_blank"
           size="large"
           rel="noreferrer"
