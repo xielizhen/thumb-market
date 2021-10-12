@@ -7,8 +7,17 @@ import UtilIcon from 'utils/icon'
 import erc20ABI from 'config/abi/erc20.json'
 import BitBowNFTAbi from 'config/abi/BitBowNFT.json'
 import BitBowRepositoryAbi from 'config/abi/BitBowRepository.json'
-import { getArrowAddress, getBitBowNFTAddress, getBitBowRepositoryAddress, getTargetAddress } from 'utils/addressHelpers'
-import { getBitBowNFTContract, getBitBowRepositoryContract } from 'utils/contractHelpers'
+import {
+  getArrowAddress,
+  getBitBowNFTAddress,
+  getBitBowRepositoryAddress,
+  getTargetAddress
+} from 'utils/addressHelpers'
+import {
+  getBitBowNFTContract,
+  getBitBowRepositoryContract,
+  getBitBowFactoryContract
+} from 'utils/contractHelpers'
 import { FETCH_STEP, IMG_BASE_URL } from 'config'
 import { IAccountRes, getThumbAccount } from 'services/api'
 
@@ -51,8 +60,6 @@ export const getPropertiesByIds = async (
   beginStart: number = 0,
   endStart: number = FETCH_STEP
 ): Promise<FormAssetProperty[]> => {
-  // console.log(beginStart)
-  // console.log(endStart)
   // 获取所有ID
   const idCalls = new Array(endStart - beginStart).fill(0).map((item, index) => ({
     address: getBitBowNFTAddress(),
@@ -60,8 +67,6 @@ export const getPropertiesByIds = async (
     params: [account, index+beginStart],
   }))
   const idResults = await multicall(BitBowNFTAbi, idCalls)
-
-  // console.log(idResults)
 
   // 获取所有id对应的属性
   const propertyCalls = idResults.map((item, index) => ({
@@ -109,6 +114,11 @@ export const fetchAssets = async (account: string): Promise<Assets> => {
     arrowNum: new BigNumber(parsedLpAllowances[0]).toNumber(),
     targetNum: new BigNumber(parsedLpAllowances[1]).toNumber()
   }
+}
+
+export const fetchClubCount = async (account: string): Promise<number> => {
+  const clubCount = await getBitBowFactoryContract().methods.clubCount(account).call()
+  return clubCount
 }
 
 /**

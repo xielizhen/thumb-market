@@ -3,18 +3,18 @@ import { Button, Modal, notification } from 'antd';
 import classNames from 'classnames/bind';
 import { BitBowTypes, BitBowItem } from 'utils/icon';
 import moment from 'moment';
-import { getBitBowFactoryContract, getBitBowNFTContract, getArrowContract } from 'utils/contractHelpers'
-import { getBitBowFactoryAddress, getBitBowNFTAddress } from 'utils/addressHelpers'
+import { getBitBowFactoryContract, getBitBowNFTContract } from 'utils/contractHelpers'
+import { getBitBowNFTAddress } from 'utils/addressHelpers'
 import { useWeb3React } from '@web3-react/core';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { useAddFormAssets } from 'state/account/hooks';
-import { MAX_UNIT_256 } from 'config'
 import { useSafeState } from 'ahooks'
 
 import styles from './index.module.scss';
 import giftImg from 'assets/gift.webp'
+import useFactoryApproveArrow from 'hooks/useArrowApproveFactory';
 
 
 const cx = classNames.bind(styles);
@@ -29,14 +29,13 @@ const MysteryBox: React.FC = () => {
   const { account } = useWeb3React()
   const web3 = useWeb3();
   const { updateFormAssets } = useAddFormAssets();
+  const { loading, handleApprove, disabled, isApproved, setLoading } = useFactoryApproveArrow()
 
   const [visible, setVisible] = useState(false)
-  const [openBtnLoading, setOpenBtnLoading] = useState(false)
   const [fee, setFee] = useSafeState(0)
   const [mystery, setMystery] = useState(BitBowTypes[0])
   const [formAsset, setFormAsset] = useState<FormAssetProperty>()
-  const [isApproved, setIsApproved] = useSafeState(false)
-  const [disabled, setDisabled] = useState(true)
+
 
   // 获取开盲盒所需费用
   const getMintFee = async () => {
@@ -44,25 +43,10 @@ const MysteryBox: React.FC = () => {
     setFee(fee)
   }
 
-  // 获取授权金额
-  const getIsApproved = async () => {
-    if (!account) return
-    try {
-      setDisabled(true)
-      const allownance = await getArrowContract()
-        .methods
-        .allowance(account, getBitBowFactoryAddress())
-        .call()
-      setIsApproved(+allownance > 1000)
-    } finally {
-      setDisabled(false)
-    }
-  }
-
   // 抽取盲盒
   const handleOpenMystery = async () => {
     try {
-      setOpenBtnLoading(true)
+      setLoading(true)
       // 判断该地址是否领取过首次盲盒
       const isNft = await getBitBowNFTContract().methods.balanceOf(account).call();
 
@@ -97,39 +81,12 @@ const MysteryBox: React.FC = () => {
         description: e?.message
       })
     } finally {
-      setOpenBtnLoading(false)
-    }
-  }
-
-  // 授权
-  const handleApprove = async () => {
-    const amount = web3.utils.toHex(MAX_UNIT_256.toString())
-    try {
-      setOpenBtnLoading(true)
-      await getArrowContract(web3)
-        .methods
-        .approve(getBitBowFactoryAddress(), amount)
-        .send({
-          from: account
-        })
-        .on('transactionHash', (tx) => {
-          return tx.transactionHash
-        })
-
-      await getIsApproved()
-    } catch (e: any) {
-      notification.error({
-        message: 'Error',
-        description: e?.message
-      })
-    } finally {
-      setOpenBtnLoading(false)
+      setLoading(false)
     }
   }
 
   useEffect(() => {
     getMintFee()
-    getIsApproved()
   }, [account])
 
   useEffect(() => {
@@ -142,12 +99,16 @@ const MysteryBox: React.FC = () => {
       <div>
         This blind box contains an {mystery.label} <br /> Cost for each attempt: {fee} Targets
       </div>
-      {
-        isApproved
-          ? <Button disabled={disabled} loading={openBtnLoading} size="large" type="primary" onClick={handleOpenMystery}>Open it</Button>
-          : <Button disabled={disabled} loading={openBtnLoading} size="large" type="primary" onClick={handleApprove}>Approve it</Button>
-      }
-
+      <Button
+        disabled={disabled}
+        loading={loading}
+        size="large"
+        type="primary"
+        onClick={isApproved ? handleOpenMystery : handleApprove }
+      >
+        { isApproved ? 'Open it': 'Approve it' }
+      </Button>
+     
       <Modal
         className='mystery-modal'
         title="Congratulations！"
