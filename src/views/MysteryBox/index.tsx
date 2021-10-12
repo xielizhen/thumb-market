@@ -10,7 +10,7 @@ import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { useAddFormAssets } from 'state/account/hooks';
-import { useSafeState } from 'ahooks'
+import { useSafeState, useInterval } from 'ahooks'
 import ImgContainer from 'components/ImgContainer';
 
 import styles from './index.module.scss';
@@ -36,7 +36,9 @@ const MysteryBox: React.FC = () => {
   const [fee, setFee] = useSafeState(0)
   const [mystery, setMystery] = useState(BitBowTypes[0])
   const [formAsset, setFormAsset] = useState<FormAssetProperty>()
+  const [leftTime, setLeftTime] = useState('')
 
+  const nextSunday = moment().day(7).startOf('day')
 
   // 获取开盲盒所需费用
   const getMintFee = async () => {
@@ -86,6 +88,17 @@ const MysteryBox: React.FC = () => {
     }
   }
 
+  // 距离下一次更换盲盒类型时间
+  useInterval(() => {
+    const duration = moment.duration(nextSunday.diff(moment()))
+    setLeftTime(`
+      ${duration.days()}d
+      ${duration.hours()}h
+      ${duration.minutes()}m
+      ${duration.seconds()}s
+    `)
+  }, 1000, { immediate: true })
+
   useEffect(() => {
     getMintFee()
   }, [account])
@@ -98,7 +111,11 @@ const MysteryBox: React.FC = () => {
     <div className={cx('mystery-box')}>
       <img src={giftImg} alt="" />
       <div>
-        This blind box contains an {mystery.label} <br /> Cost for each attempt: {fee} Targets
+        This blind box contains an {mystery.label} 
+        <br /> 
+        Cost for each attempt: {fee} Targets
+        <br />
+        Current round left: {leftTime}
       </div>
       <Button
         disabled={disabled}
