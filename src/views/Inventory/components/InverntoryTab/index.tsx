@@ -8,6 +8,7 @@ import ImgContainer from 'components/ImgContainer';
 import SellModal from '../SellModal';
 import SynthesizeModal from '../SynthesizeModal';
 import styles from './index.module.scss';
+import { BitBowTypeEnum } from 'utils/icon';
 
 const cx = classNames.bind(styles)
 
@@ -89,6 +90,7 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
                 <ImgContainer
                   imgSrc={tab.imgSrc}
                   containerStyle={{width: '160px', height: '160px'}}
+                  imgStyle={tab.type === BitBowTypeEnum.BOW ? { maxWidth: '100%', maxHeight: '100%'} : {}}
                 />
                 <Checkbox
                   style={{marginTop: '14px'}}

@@ -69,15 +69,27 @@ const AccountAssets: React.FC = () => {
       </div>
       <div className={cx('panels')}>
         <div className={cx('panel')}>
-          <ImgContainer imgSrc={ArrowsIcon} />
+          <ImgContainer
+            imgSrc={ArrowsIcon}
+            containerStyle={{width: '100px', height: '100px'}}
+            imgStyle={{maxWidth: '60%'}}
+          />
           <div className={cx('name')}>{assets.arrowNum} Arrows</div>
         </div>
         <div className={cx('panel')}>
-        <ImgContainer imgSrc={TargetIcon} />
+        <ImgContainer
+          imgSrc={TargetIcon}
+          containerStyle={{width: '100px', height: '100px'}}
+          imgStyle={{maxWidth: '60%'}}
+        />
           <div className={cx('name')}>{assets.targetNum} Targets</div>
         </div>
         <div className={cx('panel')}>
-          <ImgContainer imgSrc={BnbIcon} />
+          <ImgContainer
+            imgSrc={BnbIcon}
+            containerStyle={{width: '100px', height: '100px'}}
+            imgStyle={{maxWidth: '60%'}}
+          />
           <div className={cx('name')}>{new BigNumber(assets.BNBNum).toFixed(3)} BNB</div>
         </div>
       </div>
@@ -86,7 +98,11 @@ const AccountAssets: React.FC = () => {
         {
           BitBowTypes.map((item) => (
             <div className={cx('panel')} key={item.value}>
-              <ImgContainer imgSrc={item.imgSrc} />
+              <ImgContainer
+                imgSrc={item.imgSrc}
+                containerStyle={{width: '100px', height: '100px'}}
+                imgStyle={{maxWidth: '60%'}}
+              />
               <div className={cx('name')}>
                 {formAssets.find(o => o.type === item.value)?.assets.length || 0} {item.label}s
               </div>
