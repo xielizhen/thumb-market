@@ -8,6 +8,7 @@ import { useWeb3React } from '@web3-react/core';
 import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { MAX_UNIT_256 } from 'config';
+import { useSafeState } from 'ahooks'
 
 import TargetIcon from 'assets/target.webp';
 import UnkownIcon from 'assets/unkown.webp';
@@ -35,12 +36,12 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
   const web3 = useWeb3()
   const { account } = useWeb3React()
 
-  const [targetAmount, setTargetAmount] = useState(0)
+  const [targetAmount, setTargetAmount] = useSafeState(0)
   const [loading, setLoading] = useState(false)
   const [syntheStatus, setSyntheStatus] = useState(Synthe.UNKOWN)
   const [currentAsset, setCurrentAsset] = useState<FormAssetProperty>()
-  const [isApproved, setIsApproved] = useState(false)
-  const [disabled, setDisabled] = useState(true)
+  const [isApproved, setIsApproved] = useSafeState(false)
+  const [disabled, setDisabled] = useSafeState(true)
 
   const getTargetAmount = async () => {
     if (!checkedList.length) return

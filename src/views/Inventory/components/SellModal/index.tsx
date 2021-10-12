@@ -5,8 +5,8 @@ import { FormAssetProperty } from 'state/types';
 import { getBitBowNFTContract, getStoreContract } from 'utils/contractHelpers';
 import useWeb3 from 'hooks/useWeb3';
 import { useWeb3React } from '@web3-react/core';
-import BigNumber from 'bignumber.js';
 import { useAddFormAssets } from 'state/account/hooks'
+import { useSafeState } from 'ahooks'
 
 import styles from './index.module.scss'
 import { getBitBowStoreAddress } from 'utils/addressHelpers';
@@ -25,8 +25,8 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel }) => {
 
   const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState<string | number>('')
-  const [isApproved, setIsApproved] = useState(false)
-  const [disabled, setDisabled] = useState(true)
+  const [isApproved, setIsApproved] = useSafeState(false)
+  const [disabled, setDisabled] = useSafeState(true)
 
   const handleConfirm = async () => {
     try {

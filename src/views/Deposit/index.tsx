@@ -28,7 +28,7 @@ const Deposit: React.FC = () => {
   }, [amount])
   
   const max = useMemo(() => {
-    return  assets.targetNum > 1 ? assets.targetNum - 1 : 0
+    return  assets.targetNum > 1 ? assets.targetNum : 0
   }, [assets.targetNum])
   
   const handleNumChange = (e) => {

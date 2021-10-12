@@ -11,6 +11,7 @@ import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { useAddFormAssets } from 'state/account/hooks';
 import { MAX_UNIT_256 } from 'config'
+import { useSafeState } from 'ahooks'
 
 import styles from './index.module.scss';
 import giftImg from 'assets/gift.webp'
@@ -31,10 +32,10 @@ const MysteryBox: React.FC = () => {
 
   const [visible, setVisible] = useState(false)
   const [openBtnLoading, setOpenBtnLoading] = useState(false)
-  const [fee, setFee] = useState(0)
+  const [fee, setFee] = useSafeState(0)
   const [mystery, setMystery] = useState(BitBowTypes[0])
   const [formAsset, setFormAsset] = useState<FormAssetProperty>()
-  const [isApproved, setIsApproved] = useState(false)
+  const [isApproved, setIsApproved] = useSafeState(false)
   const [disabled, setDisabled] = useState(true)
 
   // 获取开盲盒所需费用
