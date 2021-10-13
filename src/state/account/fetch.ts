@@ -79,7 +79,6 @@ export const getPropertiesByIds = async (
   // 数据处理
   const sortDealResult = propertyResults
   .map((o, index) => dealProperties(new BigNumber(idResults[index]).toString(), +o.form, o.properties))
-  .sort((a, b) => b.properties.quality - a.properties.quality)
 
   return sortDealResult
 }
@@ -127,6 +126,8 @@ export const fetchFormAssets = async (account: string): Promise<FormAsset[]> => 
   // 获取该地址名下有几个nft
   const nftNum = await getBitBowNFTContract().methods.balanceOf(account).call()
   const data = await getPropertiesByIds(account, 0, +nftNum)
+  
+  data.sort((a, b) => b.properties.quality - a.properties.quality)
 
   const res = data.reduce((acc, curr, index) => {
     const idx = acc.findIndex(o => o.type === curr.type)

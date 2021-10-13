@@ -4,32 +4,51 @@ import classNames from 'classnames/bind';
 import { BitBowTypeEnum, BitBowTypes, QualityTypes } from 'utils/icon';
 import { useTotalAmount, useStoreList } from './hooks'
 import { debounce } from 'lodash'
+import { useWeb3React } from '@web3-react/core';
 
 import Filter from './components/Filter';
 import MarketTable from './components/Table';
 import styles from './index.module.scss';
-import { useWeb3React } from '@web3-react/core';
+import { StoreAsset } from 'state/types';
 
 const cx = classNames.bind(styles);
 
 const { TabPane } = Tabs;
 
-type SortType = 'DESC' | 'ASC'
+enum SortEnum {
+  DESC = 'DESC',
+  ASC = 'ASC'
+}
 interface IFilters {
   type: BitBowTypeEnum
   quality?: number[],
   owner?: boolean,
 }
 interface ISorts {
-  quality?: SortType,
-  price?: SortType
+  quality?: SortEnum,
+  price?: SortEnum
+}
+
+const strategySort = {
+  qualityAsc: (a: StoreAsset, b: StoreAsset) => {
+    return a.displayProperties.quality - b.displayProperties.quality
+  },
+  qualityDesc: (a: StoreAsset, b: StoreAsset) => {
+    return b.displayProperties.quality - a.displayProperties.quality
+  },
+  priceAsc: (a: StoreAsset, b: StoreAsset) => {
+    return a.price - b.price
+  },
+  priceDesc: (a: StoreAsset, b: StoreAsset) => {
+    return b.price - a.price
+  },
 }
 
 const Marketplace: React.FC = () => {
   const { account } = useWeb3React();
   const [ activeKey, setActiveKey ] = useState(String(BitBowTypes[0].value))
   const [ filters, setFilters ] = useState<IFilters>({ type: BitBowTypeEnum.BOW })
-  const [ sorts, setSorts ] = useState<ISorts>({})
+  const [ sorts, setSorts ] = useState<ISorts>({ quality: SortEnum.DESC })
   let { totalAmount, setTotalAmount } = useTotalAmount()
   const { storeList, fetchStoreList, deleteStoreByTokenId } = useStoreList()
 
@@ -58,11 +77,14 @@ const Marketplace: React.FC = () => {
     const type = filters.type
     const owner = filters.owner
 
-    return storeList.filter(o => {
+    const filterList = storeList.filter(o => {
       const filter = o.type === type && qualitys.includes(o.displayProperties.quality)
       if (owner) return filter && o.owner === account
       return filter
     })
+    const sortQuality = sorts.quality
+    const sortPrice = sorts.price
+    return filterList
   }, [storeList, filters, sorts, account])
 
   useEffect(() => {
@@ -86,7 +108,6 @@ const Marketplace: React.FC = () => {
         <div className={cx('table-container')}>
           <div className={cx('info-container')}>
             <div className={cx('total')}>{totalAmount} Items</div>
-            <span>{storeList.length} Current Items</span>
           </div>
           <MarketTable
             assets={displayStoreList}
