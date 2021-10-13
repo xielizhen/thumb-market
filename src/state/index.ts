@@ -2,13 +2,11 @@ import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 
 import accountReducer from './account'
-import markeReducer from './market'
 
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   reducer: {
-    account: accountReducer,
-    market: markeReducer
+    account: accountReducer
   },
 })
 

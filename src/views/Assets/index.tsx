@@ -5,11 +5,12 @@ import BigNumber from 'bignumber.js';
 import { useWeb3React } from '@web3-react/core';
 import { useAccount } from 'state/account/hooks'
 import { BitBowTypes } from 'utils/icon';
-import useFactoryApproveArrow from 'hooks/useArrowApproveFactory';
+import useApproveArrow from 'hooks/useApproveArrow';
 import { getBitBowFactoryContract } from 'utils/contractHelpers';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchClubCount } from 'state/account/fetch';
 import ImgContainer from 'components/ImgContainer';
+import { getBitBowFactoryAddress } from 'utils/addressHelpers';
 
 import TargetIcon from 'assets/target.webp';
 import ArrowsIcon from 'assets/arrows.webp';
@@ -29,7 +30,8 @@ const AccountAssets: React.FC = () => {
   },
     [account]
   )
-  const { loading, handleApprove, disabled, isApproved, setLoading } = useFactoryApproveArrow();
+  const { loading, handleApprove, disabled, isApproved, setLoading } = useApproveArrow(getBitBowFactoryAddress());
+
   const [clubCount, setClubCount] = useState(0)
 
   const getClubCount = useCallback(async () => {

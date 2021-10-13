@@ -3,11 +3,10 @@ import { useSafeState } from "ahooks";
 import { notification } from "antd";
 import { MAX_UNIT_256 } from "config";
 import { useEffect } from "react";
-import { getBitBowFactoryAddress } from "utils/addressHelpers";
 import { getArrowContract } from "utils/contractHelpers";
 import useWeb3 from "./useWeb3"
 
-const useFactoryApproveArrow = () => {
+const useArrowApprove = (contractAddress: string) => {
   const web3 = useWeb3()
   const { account } = useWeb3React()
 
@@ -22,9 +21,9 @@ const useFactoryApproveArrow = () => {
       setDisabled(true)
       const allownance = await getArrowContract()
         .methods
-        .allowance(account, getBitBowFactoryAddress())
+        .allowance(account, contractAddress)
         .call()
-      
+      console.log(allownance)
       setIsApproved(+allownance > 1000)
     } finally {
       setDisabled(false)
@@ -38,7 +37,7 @@ const useFactoryApproveArrow = () => {
       setLoading(true)
       await getArrowContract(web3)
         .methods
-        .approve(getBitBowFactoryAddress(), amount)
+        .approve(contractAddress, amount)
         .send({
           from: account
         })
@@ -71,4 +70,4 @@ const useFactoryApproveArrow = () => {
   }
 }
 
-export default useFactoryApproveArrow
+export default useArrowApprove

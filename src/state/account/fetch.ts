@@ -106,13 +106,10 @@ export const fetchAssets = async (account: string): Promise<Assets> => {
   ]
 
   const rawLpAllowances = await multicall(erc20ABI, calls)
-  const parsedLpAllowances = rawLpAllowances.map((lpBalance) => {
-    return new BigNumber(lpBalance).div(BIG_TEN.pow(18)).toNumber()
-  })
 
   return {
-    arrowNum: new BigNumber(parsedLpAllowances[0]).toNumber(),
-    targetNum: new BigNumber(parsedLpAllowances[1]).toNumber()
+    arrowNum: new BigNumber(rawLpAllowances[0]).div(BIG_TEN.pow(18)).toNumber(),
+    targetNum: new BigNumber(rawLpAllowances[1]).toNumber()
   }
 }
 

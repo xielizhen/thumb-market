@@ -4,7 +4,7 @@ import classNames from 'classnames/bind';
 import { BitBowTypes, BitBowItem } from 'utils/icon';
 import moment from 'moment';
 import { getBitBowFactoryContract, getBitBowNFTContract } from 'utils/contractHelpers'
-import { getBitBowNFTAddress } from 'utils/addressHelpers'
+import { getBitBowFactoryAddress, getBitBowNFTAddress } from 'utils/addressHelpers'
 import { useWeb3React } from '@web3-react/core';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
@@ -15,7 +15,7 @@ import ImgContainer from 'components/ImgContainer';
 
 import styles from './index.module.scss';
 import giftImg from 'assets/gift.webp'
-import useFactoryApproveArrow from 'hooks/useArrowApproveFactory';
+import useApproveArrow from 'hooks/useApproveArrow';
 
 
 const cx = classNames.bind(styles);
@@ -30,7 +30,7 @@ const MysteryBox: React.FC = () => {
   const { account } = useWeb3React()
   const web3 = useWeb3();
   const { updateFormAssets } = useAddFormAssets();
-  const { loading, handleApprove, disabled, isApproved, setLoading } = useFactoryApproveArrow()
+  const { loading, handleApprove, disabled, isApproved, setLoading } = useApproveArrow(getBitBowFactoryAddress())
 
   const [visible, setVisible] = useState(false)
   const [fee, setFee] = useSafeState(0)

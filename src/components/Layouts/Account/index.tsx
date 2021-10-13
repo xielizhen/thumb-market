@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core';
 import Wallet from 'widgets/WalletModal';
 import { NavLink } from 'react-router-dom';
 import useAuth from 'hooks/useAuth';
-import { useAccount } from 'state/account/hooks';
+import { useAccount, useAllAssets, useGetUserInfo } from 'state/account/hooks';
 
 import HeadImg from 'assets/head.webp';
 import { AssetsIcon } from 'components/Svg';
@@ -15,6 +15,8 @@ import config from '../config'
 const cx = classNames.bind(styles);
 
 const Account: React.FC = ({ children }) => {
+  useAllAssets();
+  useGetUserInfo();
   const accountRoutes = config.find(o => o.href === '/account')?.items || []
   const location = useLocation();
   const { account } = useWeb3React();

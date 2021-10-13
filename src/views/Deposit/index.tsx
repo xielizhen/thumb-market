@@ -40,10 +40,9 @@ const Deposit: React.FC = () => {
   }
 
   const handleTransfer = async () => {
-    const num = web3.utils.toWei(String(amount), 'ether');
     try {
       setLoading(true)
-      await getTargetContract(web3).methods.transfer(GAME_ADDRESS, num).send({
+      await getTargetContract(web3).methods.transfer(GAME_ADDRESS, amount).send({
         from: account
       })
 
