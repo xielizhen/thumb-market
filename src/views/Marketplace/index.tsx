@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Tabs } from 'antd';
+import { Button, Tabs, Select } from 'antd';
 import classNames from 'classnames/bind';
 import { BitBowTypeEnum, BitBowTypes, QualityTypes } from 'utils/icon';
 import { useTotalAmount, useStoreList } from './hooks'
@@ -14,41 +14,49 @@ import { StoreAsset } from 'state/types';
 const cx = classNames.bind(styles);
 
 const { TabPane } = Tabs;
+const { Option } = Select
 
-enum SortEnum {
-  DESC = 'DESC',
-  ASC = 'ASC'
-}
 interface IFilters {
   type: BitBowTypeEnum
   quality?: number[],
   owner?: boolean,
 }
-interface ISorts {
-  quality?: SortEnum,
-  price?: SortEnum
-}
 
-const strategySort = {
-  qualityAsc: (a: StoreAsset, b: StoreAsset) => {
-    return a.displayProperties.quality - b.displayProperties.quality
+const sortOptions: {
+  label: string,
+  strategy: (a: StoreAsset, b: StoreAsset) => number 
+}[] = [
+  {
+    label: 'Highest Quality',
+    strategy: (a: StoreAsset, b: StoreAsset) => {
+      return b.displayProperties.quality - a.displayProperties.quality
+    }
   },
-  qualityDesc: (a: StoreAsset, b: StoreAsset) => {
-    return b.displayProperties.quality - a.displayProperties.quality
+  {
+    label: 'Lowest Qualilty',
+    strategy: (a: StoreAsset, b: StoreAsset) => {
+      return a.displayProperties.quality - b.displayProperties.quality
+    }
   },
-  priceAsc: (a: StoreAsset, b: StoreAsset) => {
-    return a.price - b.price
+  {
+    label: 'Highest Price',
+    strategy: (a: StoreAsset, b: StoreAsset) => {
+      return b.price - a.price
+    }
   },
-  priceDesc: (a: StoreAsset, b: StoreAsset) => {
-    return b.price - a.price
-  },
-}
+  {
+    label: 'Lowest Price',
+    strategy: (a: StoreAsset, b: StoreAsset) => {
+      return a.price - b.price
+    }
+  }
+]
 
 const Marketplace: React.FC = () => {
   const { account } = useWeb3React();
   const [ activeKey, setActiveKey ] = useState(String(BitBowTypes[0].value))
   const [ filters, setFilters ] = useState<IFilters>({ type: BitBowTypeEnum.BOW })
-  const [ sorts, setSorts ] = useState<ISorts>({ quality: SortEnum.DESC })
+  const [ sortType, setSortType ] = useState<string>(sortOptions[0].label)
   let { totalAmount, setTotalAmount } = useTotalAmount()
   const { storeList, fetchStoreList, deleteStoreByTokenId } = useStoreList()
 
@@ -82,10 +90,10 @@ const Marketplace: React.FC = () => {
       if (owner) return filter && o.owner === account
       return filter
     })
-    const sortQuality = sorts.quality
-    const sortPrice = sorts.price
-    return filterList
-  }, [storeList, filters, sorts, account])
+
+    const strategy = sortOptions.find(o => o.label === sortType)?.strategy || sortOptions[0].strategy
+    return filterList.sort(strategy)
+  }, [storeList, filters, sortType, account])
 
   useEffect(() => {
     if (!totalAmount) return
@@ -108,6 +116,15 @@ const Marketplace: React.FC = () => {
         <div className={cx('table-container')}>
           <div className={cx('info-container')}>
             <div className={cx('total')}>{totalAmount} Items</div>
+            <Select
+              defaultValue={sortOptions[0].label}
+              onChange={(val) => setSortType(val)}>
+              {
+                sortOptions.map((o) => (
+                  <Option value={o.label} key={o.label}>{o.label}</Option>
+                ))
+              }
+            </Select>
           </div>
           <MarketTable
             assets={displayStoreList}
