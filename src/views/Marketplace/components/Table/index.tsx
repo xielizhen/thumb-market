@@ -92,7 +92,7 @@ const MarketTable: React.FC<IProps> = ({ assets, updateAssets }) => {
       title: 'Price',
       dataIndex: 'price',
       render: (price: string) => {
-        return <span>{price} BNB</span>
+        return <span>{price} Arrow</span>
       }
     },
     {
