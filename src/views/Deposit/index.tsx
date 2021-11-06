@@ -8,7 +8,6 @@ import useWeb3 from "hooks/useWeb3";
 import { GAME_ADDRESS } from "config";
 
 import ConfirmBtn from "components/ConfirmBtn";
-import CopyToClipboard from 'components/CopyToClipboard';
 
 import TargetIcon from 'assets/target.webp';
 import BnbLogoIcon from 'assets/bnbLogo.webp';
@@ -111,7 +110,6 @@ const Deposit: React.FC = () => {
                 <span className={cx('name')}>BNB Network</span>
               </div>
               <div className={cx('addr')}>{accountEllipsis}
-                {/* <CopyToClipboard toCopy={account} /> */}
               </div>
             </div>
 
@@ -125,7 +123,6 @@ const Deposit: React.FC = () => {
                 <span className={cx('name')}>Game address</span>
               </div>
               <div className={cx('addr')}>{gameAccountEllipsis}
-                {/* <CopyToClipboard toCopy={GAME_ADDRESS} /> */}
               </div>
             </div>
           </div>

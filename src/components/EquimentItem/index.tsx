@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { CSSProperties, FC } from 'react'
 import classNames from 'classnames/bind'
 import { SvgProps } from 'components/Svg'
 import { BitBowTypeEnum, QualityTypes } from 'utils/icon'
@@ -37,6 +37,7 @@ interface IProps {
   type: BitBowTypeEnum,
   quality: number,
   imgUrl: string,
+  style?:CSSProperties,
   properties?: {
     [key: string]: any
   }
@@ -46,14 +47,15 @@ const EquimentItem: FC<IProps>= ({
   type,
   quality,
   imgUrl,
-  properties
+  properties,
+  style
 }) => {
   const { icon: Icon } = PropertiesByType.find(o => o.type === type)
   const qualityItem = QualityTypes.find(o => +o.value === +quality)
   const { className, fill } = qualityItem
 
   return (
-    <div className={cx('equiment-container', className )}>
+    <div className={cx('equiment-container', className )} style={style}>
       <Icon className={cx('icon')} fill={fill} />
       <img className={cx({ 'bow': type === BitBowTypeEnum.BOW })} src={imgUrl} alt="equiment" />
     </div>

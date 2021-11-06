@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, notification } from 'antd';
+import { notification } from 'antd';
 import classNames from 'classnames/bind';
 import { BitBowTypes, BitBowItem } from 'utils/icon';
 import moment from 'moment';
@@ -10,13 +10,14 @@ import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { useAddFormAssets } from 'state/account/hooks';
-import { useSafeState, useInterval } from 'ahooks'
-import ImgContainer from 'components/ImgContainer';
+import { useSafeState, useInterval } from 'ahooks';
+import useApproveArrow from 'hooks/useApproveArrow';
+
 import ConfirmBtn from 'components/ConfirmBtn';
+import EquimentItem from 'components/EquimentItem';
 
 import styles from './index.module.scss';
-import giftImg from 'assets/gift.webp'
-import useApproveArrow from 'hooks/useApproveArrow';
+import giftImg from 'assets/gift.webp';
 
 
 const cx = classNames.bind(styles);
@@ -76,6 +77,7 @@ const MysteryBox: React.FC = () => {
       // 根据id获取properties和img
       const asset = await fetchPropertiesById(String(id))
       setFormAsset(asset)
+      console.log(asset)
       setVisible(true)
 
       // 更新formAssets
@@ -111,57 +113,42 @@ const MysteryBox: React.FC = () => {
 
   return (
     <div className={cx('mystery-box')}>
-      <img src={giftImg} alt="" />
-      <div className={cx('info')}>
-        This blind box contains an {mystery.label}. Cost for each attempt: {fee} Targets
-        <div className={cx('left-time')}>
-          Current round left: {leftTime}
-        </div>
-      </div>
-
-      <ConfirmBtn
-        style={{marginTop: '16px'}}
-        title={isApproved ? 'Open it': 'Approve it' }
-        disabled={disabled}
-        loading={loading}
-        onClick={isApproved ? handleOpenMystery : handleApprove }
-      />
-
-      {/* <Button
-        disabled={disabled}
-        loading={loading}
-        size="large"
-        type="primary"
-        onClick={isApproved ? handleOpenMystery : handleApprove }
-      >
-        { isApproved ? 'Open it': 'Approve it' }
-      </Button> */}
-     
-      <Modal
-        className='mystery-modal'
-        title="Congratulations！"
-        centered
-        width={690}
-        footer={null}
-        visible={visible}
-        okText="确认"
-        cancelText="取消"
-      >
-        <div className={cx('modal-content')}>
-          <div className={cx('info')}>You got a {BitBowTypes.find(o => o.value === formAsset?.type)?.label} from the blind box</div>
-          <div className={cx('detail')}>
-            <ImgContainer imgSrc={formAsset?.imgSrc} />
-            <div className={cx('attrs')}>
-              {
-                Object.entries(formAsset?.displayProperties || []).map(([key, value]) => (
-                  <p key={key}>{key}: {value}</p>
-                ))
-              }
+      {
+        visible ? (
+          <>
+            <div className={cx('cong')}>Congratualations！</div>
+            <EquimentItem
+              style={{marginTop: '63px'}}
+              type={formAsset?.type}
+              quality={formAsset?.displayProperties.quality}
+              imgUrl={formAsset?.imgSrc}
+              properties={formAsset?.displayProperties}
+            />
+            <ConfirmBtn
+              style={{marginTop: '94px'}}
+              title="Great"
+              onClick={() => setVisible(false)}
+            />
+          </>
+        ) : (
+          <>
+            <img src={giftImg} alt="" />
+            <div className={cx('info')}>
+              This blind box contains an {mystery.label}. Cost for each attempt: {fee} Targets
+              <div className={cx('left-time')}>
+                Current round left: {leftTime}
+              </div>
             </div>
-          </div>
-          <Button type="primary" size="large" onClick={() => setVisible(false)}>Great</Button>
-        </div>
-      </Modal>
+            <ConfirmBtn
+              style={{ marginTop: '16px' }}
+              title={isApproved ? 'Open it' : 'Approve it'}
+              disabled={disabled}
+              loading={loading}
+              onClick={isApproved ? handleOpenMystery : handleApprove}
+            />
+          </>
+        )
+      }
     </div>
   )
 }
