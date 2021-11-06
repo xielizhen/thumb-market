@@ -1,0 +1,49 @@
+:global {
+  .connect-wallet-modal {
+    .ant-modal {
+      top: 26px;
+    }
+    .ant-modal-content {
+      background: url(../../../../assets/wallet-modal.webp) no-repeat center;
+      background-size: 100%;
+      width: 467px;
+      height: 724px;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    .ant-modal-body {
+      padding: 0;
+    }
+    .ant-modal-close {
+      top: -8px;
+      right: 2px;
+    }
+    .ant-modal-close-x {
+      width: 74px;
+      height: 74px;
+      line-height: 74px;
+      > img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 21px;
+  .title {
+    color: #fedd71;
+    font-size: 18px;
+    margin-top: 62px;
+    line-height: 1;
+    margin-bottom: 34px;
+  }
+  .connectors {
+    height: 570px;
+    overflow: auto;
+  }
+}

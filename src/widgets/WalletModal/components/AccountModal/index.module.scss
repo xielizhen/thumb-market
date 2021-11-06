@@ -1,32 +1,89 @@
-@import '../../../../styles/var.scss';
-
-.account {
-  color: #d6d6d6;
-  font-weight: 600;
-  line-height: 1.5;
-  font-size: 20px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin-bottom: 8px;
-  cursor: pointer;
-}
-
-.info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 32px;
-  .view {
-    display: flex;
-    align-items: center;
-    margin-right: 16px;
-    color: $primary-color;
-    &:hover {
-      text-decoration: underline;
+:global {
+  .account-wallet-modal {
+    .ant-modal {
+      top: 100px;
+    }
+    .ant-modal-content {
+      background: url(../../../../assets/account-modal.webp) no-repeat center;
+      background-size: 100%;
+      width: 705px;
+      height: 428px;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    .ant-modal-body {
+      padding: 0;
+    }
+    .ant-modal-close {
+      top: -27px;
+      right: -35px;
+    }
+    .ant-modal-close-x {
+      width: 74px;
+      height: 74px;
+      line-height: 74px;
+      > img {
+        width: 100%;
+      }
     }
   }
 }
 
-.logout {
-  display: flex;
-  justify-content: center;
+.content {
+  padding: 28px 38px 38px 38px;
+  .title {
+    color: #FEDD71;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 7px 19px;
+    border-bottom: 1px solid #DABC66;
+  }
+
+  .body {
+    padding: 0 7px;
+  }
+
+  .account {
+    color: #fff;
+    font-size: 19px;
+    margin-top: 38px;
+  }
+  
+  .info {
+    display: flex;
+    align-items: center;
+    margin-top: 38px;
+    font-size: 14px;
+    .view {
+      display: flex;
+      align-items: center;
+      margin-right: 40px;
+      color: #FABE32;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .logout-container {
+    margin-top: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .logout {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: #291C44;
+      background: url(../../../../assets/wallet-bg.webp) no-repeat center;
+      background-size: 100% 100%;
+      width: 149px;
+      height: 42px;
+      &:hover, &:active {
+        opacity: .9;
+      }
+    }
+  }
 }

@@ -1,20 +1,23 @@
-@import '../../../../styles/var.scss';
-
 .card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
-  background: linear-gradient(180deg, #585858, #414141 99%);
-  // border: 1px solid #1a1a1a;
-  border-radius: 8px;
+  background: url(../../../../assets/wallet-bg.webp) no-repeat center;
+  background-size: 100%;
+  width: 280px;
+  height: 79px;
   cursor: pointer;
-  margin-top: 6px;
-  border-radius: 6px;
+  padding: 0 30px 0 40px;
+  margin-top: 16px;
+  &:first-child {
+    margin-top: 0;
+  }
   .card-title {
-    color: $primary-color;
+    font-size: 18px;
+    color: #291c44;
+    font-weight: 600;
   }
   &:hover {
-    opacity: .65;
+    opacity: .9;
   }
 }

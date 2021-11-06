@@ -1,9 +1,13 @@
 import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
+import classNames from 'classnames/bind';
 import { Button } from 'antd';
 
+import styles from './index.module.scss';
 import { Login } from './types'
 import ConnectWallet from './components/ConnectWallet';
 import AccountModal from './components/AccountModal';
+
+const cx = classNames.bind(styles);
 
 interface IProps {
   account?: string;
@@ -19,11 +23,11 @@ const Wallet: React.FC<IProps> = ({ login, logout, onDismiss, account, ...props 
   const [accountModalVisible, setAccountModalVisible] = useState(false)
   const accountEllipsis = useMemo(() => {
     return account
-      ? `${account.substring(0, 4)}...${account.substring(account.length - 4)}` 
+      ? `${account.substring(0, 6)}...${account.substring(account.length - 6)}` 
       : null}, 
     [account]
   )
-  const handleClick = () => {
+  const handleClick = async () => {
     if (account) {
       setAccountModalVisible(true)
     } else {
@@ -37,8 +41,13 @@ const Wallet: React.FC<IProps> = ({ login, logout, onDismiss, account, ...props 
 
   return (
     <div className={props.className} style={props.style}>
-      <Button type="primary" onClick={handleClick}>
-        { account ? `${accountEllipsis}` : 'Connect'}
+       <Button
+        size="small"
+        type="primary"
+        onClick={handleClick}
+        ghost
+      >
+        { account ? `Add: ${accountEllipsis}` : 'Connect'}
       </Button>
       <AccountModal
         visible={accountModalVisible}

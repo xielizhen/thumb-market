@@ -7,6 +7,10 @@
     .info-container {
       display: flex;
       align-items: center;
+      .avtar-container {
+        display: flex;
+        align-items: center;
+      }
       .avtar {
         width: 74px;
       }
