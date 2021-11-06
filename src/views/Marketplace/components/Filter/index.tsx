@@ -35,7 +35,7 @@ const Filter: React.FC<IProps>= ({ filterAssets }) => {
           onChange={(checked) => setFieldValue('quality', checked)}
         />
       </div>
-      <div className={cx('panel')}>
+      <div className={cx('panel')} style={{marginTop: '40px'}}>
         <span style={{marginRight: '10px'}}>owner</span>
         <Switch
           checked={values.owner}

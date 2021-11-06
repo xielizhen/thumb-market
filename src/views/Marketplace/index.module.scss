@@ -1,36 +1,54 @@
 .market-container {
-  .table-container {
-    flex: 1;
-    padding: 0 24px 40px;
-    background: #484848;
-    .info-container {
+  .tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .tab {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      height: 60px;
-      border-bottom: 1px solid #d6d6d6;
-      font-size: 24px;
-      color: #fff;
-    }
-    .btn-container {
-      display: flex;
       justify-content: center;
-      margin-top: 30px;
+      width: 228px;
+      height: 54px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url(../../assets/market-tab-bg-disabled.webp);
+      background-size: 100% 100%;
+      font-size: 20px;
+      margin-right: 24px;
+      color: #6D7297;
+      cursor: pointer;
+      &:last-child {
+        margin-right: 0;
+      }
+      &.active {
+        background-image: url(../../assets/market-tab-bg.webp);
+        color: #291C44;
+      }
     }
   }
   .content-container {
     display: flex;
+    margin-top: 68px;
   }
-  :global {
-    .ant-tabs {
-      .ant-tabs-nav {
-        background-color: #2e2e2e;
-        border-top: 1px solid #9f9f9f;
-        margin: 0;
-        height: 50px;
-        &:before {
-          display: none;
-        }
+  .table-container {
+    flex: 1;
+    margin-left: 40px;
+    .info-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .total {
+        font-size: 40px;
+        color: #FABE32;
+      }
+    }
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+      .no-data {
+        color: #9F9F9F;
+        font-size: 16px;
       }
     }
   }

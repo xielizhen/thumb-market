@@ -1,0 +1,37 @@
+.panels {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 13px;
+  .panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 33px;
+    margin-right: 48px;
+    margin-bottom: 82px;
+    width: 281px;
+    height: 440px;
+    background: url(../../../../assets/market-equiment-bg.webp) no-repeat center;
+    background-size: 100% 100%;
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+    .price-container {
+      width: 80%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      color: #FABE32;
+      img {
+        width: 14px;
+        margin-right: 7px;
+      }
+      .num {
+        font-size: 28px;
+        font-weight: bold;
+      }
+    }
+  }
+}
