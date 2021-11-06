@@ -32,7 +32,8 @@ const MarketList: React.FC<IProps> = ({ assets, updateAssets }) => {
       })
 
       notification.success({
-        message: 'Buy Success'
+        message: 'Buy Success',
+        className: 'notification-success'
       })
 
       // 从storelist列表删除
@@ -40,7 +41,8 @@ const MarketList: React.FC<IProps> = ({ assets, updateAssets }) => {
     } catch (e: any) {
       notification.error({
         message: 'Error',
-        description: e?.message
+        description: e?.message,
+        className: 'notification-error'
       })
     }
   }
@@ -54,7 +56,8 @@ const MarketList: React.FC<IProps> = ({ assets, updateAssets }) => {
       })
 
       notification.success({
-        message: 'Delist Success'
+        message: 'Delist Success',
+        className: 'notification-success'
       })
 
       // 从storelist列表删除
@@ -62,7 +65,8 @@ const MarketList: React.FC<IProps> = ({ assets, updateAssets }) => {
     } catch (e: any) {
       notification.error({
         message: 'Error',
-        description: e?.message
+        description: e?.message,
+        className: 'notification-error'
       })
     }
   }

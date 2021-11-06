@@ -27,7 +27,8 @@ axiosInstance.interceptors.response.use(
     if (code !== 200) {
       notification.error({
         message: 'Fetch Error',
-        description: msg
+        description: msg,
+        className: 'notification-error'
       })
       return Promise.reject(msg)
     }

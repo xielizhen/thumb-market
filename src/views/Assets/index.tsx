@@ -50,7 +50,8 @@ const AccountAssets: React.FC = () => {
     } catch (e: any) {
       notification.error({
         message: 'Error',
-        description: e?.message
+        description: e?.message,
+        className: 'notification-error'
       })
     } finally {
       setLoading(false)

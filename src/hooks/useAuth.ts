@@ -32,7 +32,8 @@ const useAuth = () => {
             if (error instanceof NoEthereumProviderError || error instanceof NoBscProviderError) {
               notification.error({
                 message: 'Provider Error',
-                description: 'No provider was found'
+                description: 'No provider was found',
+                className: 'notification-error'
               })
             } else if (
               error instanceof UserRejectedRequestErrorInjected ||
@@ -44,12 +45,14 @@ const useAuth = () => {
               }
               notification.error({
                 message: 'Authorization Error', 
-                description: 'Please authorize to access your account'
+                description: 'Please authorize to access your account',
+                className: 'notification-error'
               })
             } else {
               notification.error({
                 message: error.name, 
-                description: error.message
+                description: error.message,
+                className: 'notification-error'
               })
             }
           }
@@ -57,7 +60,8 @@ const useAuth = () => {
       } else {
         notification.error({
           message: 'Unable to find connector',
-          description: 'The connector config is wrong'
+          description: 'The connector config is wrong',
+          className: 'notification-error'
         })
       }
     },

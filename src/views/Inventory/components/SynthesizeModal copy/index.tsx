@@ -86,7 +86,8 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
     } catch (e: any) {
       notification.error({
         message: 'Error',
-        description: e?.message
+        description: e?.message,
+        className: 'notification-error'
       })
     } finally {
       setLoading(false)
@@ -146,7 +147,8 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
     } catch (e: any) {
       notification.error({
         message: 'Error',
-        description: e?.message
+        description: e?.message,
+        className: 'notification-error'
       })
     } finally {
       setLoading(false)

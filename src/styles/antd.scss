@@ -1,0 +1,44 @@
+.notification-error {
+  background: #13092b;
+  border: 1px solid #ff4b4b;
+  border-radius: 8px;
+  .ant-notification-notice-close {
+    color: #ff4b4b;
+  }
+  .ant-notification-notice-message {
+    color: #ff4b4b;
+  }
+  .ant-notification-notice-description {
+    color: #9f9f9f;
+  }
+}
+
+.notification-success {
+  background: #13092b;
+  border: 1px solid #4bff8f;
+  border-radius: 8px;
+  .ant-notification-notice-close {
+    color: #4bff8f;
+  }
+  .ant-notification-notice-message {
+    color: #4bff8f;
+  }
+  .ant-notification-notice-description {
+    color: #4bff8f;
+  }
+}
+
+.notification-info {
+  background: #13092b;
+  border: 1px solid #FFC300;
+  border-radius: 8px;
+  .ant-notification-notice-close {
+    color: #FFC300;
+  }
+  .ant-notification-notice-message {
+    color: #FFC300;
+  }
+  .ant-notification-notice-description {
+    color: #FFC300;
+  }
+}
