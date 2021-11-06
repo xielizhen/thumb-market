@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs } from 'antd';
 import { useAccount } from 'state/account/hooks'
-import { BitBowTypes } from 'utils/icon'
+import { BitBowTypes, BitBowTypeEnum } from 'utils/icon'
 import { FormAssetProperty } from 'state/types';
+import classNames from 'classnames/bind';
 
 import InventoryTab from './components/InverntoryTab';
 
-const { TabPane } = Tabs;
+import styles from './index.module.scss'
+
+const cx = classNames.bind(styles)
 
 const Inventory: React.FC = () => {
   const { formAssets } = useAccount()
   const [ assets, setAssets ] = useState<FormAssetProperty[]>([])
-  const [ activeKey, setActiveKey ] = useState(String(BitBowTypes[0].value))
+  const [ activeKey, setActiveKey ] = useState(BitBowTypes[0].value)
 
-  const handleTabChange = (val: string) => {
+  const handleTabChange = (val: BitBowTypeEnum) => {
     setActiveKey(val)
     const currentAssets = formAssets.find(o => +o.type === +val)?.assets || []
     setAssets(currentAssets)
@@ -24,21 +26,36 @@ const Inventory: React.FC = () => {
     setAssets(initAssets)
   }, [formAssets])
 
+  console.log(formAssets)
+
   return (
-    <>
-      <Tabs activeKey={activeKey} onChange={handleTabChange}>
+
+    <div className={cx('container')}>
+      <div className={cx('tabs')}>
         {
-          BitBowTypes.map((tab) => {
-            const assets = formAssets.find(o => o.type === tab.value)?.assets || []
+          BitBowTypes.map((item) => {
+            const assets = formAssets.find(o => o.type === item.value)?.assets || []
             const count = assets.length
+            const active = activeKey === item.value
             return (
-              <TabPane tab={`${tab.label}s（${count}）`} key={tab.value} />
+              <div
+                className={cx('tab', { active })}
+                key={item.value}
+                onClick={() => handleTabChange(item.value)}
+              >
+                { item.label }
+                { activeKey === item.value && <span className={cx('num')}>{count}</span> }
+              </div>
             )
           })
         }
-      </Tabs>
-      <InventoryTab assets={assets} />
-    </>
+      </div>
+      <div className={cx('content')}>
+        <div className={cx('inner')}>
+          <InventoryTab assets={assets} />
+        </div>
+      </div>
+    </div>
   )
 }
 

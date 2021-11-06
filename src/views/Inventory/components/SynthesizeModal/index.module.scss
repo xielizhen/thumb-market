@@ -1,79 +1,137 @@
 :global {
   .synthesize-modal {
-    .ant-modal-header {
-      text-align: center;
-      border-bottom: none;
+    .ant-modal {
+      top: 40px;
+    }
+    .ant-modal-content {
+      background: url(../../../../assets/account-modal.webp) no-repeat center;
+      background-size: 100% 100%;
+      width: 1009px;
+      height: 681px;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    .ant-modal-body {
+      padding: 0;
+    }
+    .ant-modal-close {
+      top: -35px;
+      right: -35px;
+    }
+    .ant-modal-close-x {
+      width: 74px;
+      height: 74px;
+      line-height: 74px;
+      > img {
+        width: 100%;
+      }
     }
   }
 }
-
 
 .content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .divider {
-    height: 45px;
-    width: 1px;
-    background: #1a1a1a;
+  justify-content: center;
+  padding: 40px 20px;
+  .title {
+    color: #FABE32;
+    font-size: 24px;
   }
-  .synthesize {
+  .body {
     position: relative;
-    display: flex;
-    align-items: center;
-    &::before {
+    width: 773px;
+    height: 393px;
+    background: url(../../../../assets/synthesize.webp) no-repeat center;
+    background-size: 100% 100%;
+    margin-top: 63px;
+    .target {
       position: absolute;
-    }
-    &::after {
-      position: absolute;
+      right: 102px;
       bottom: 0;
-      right: -40px;
-      background: #484848;
-      height: 1px;
-      width: 40px;
-    }
-    .panel {
-      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      margin-right: 60px;
-      &:last-child {
-        margin-right: 0;
+      > img {
+        width: 48px;
       }
-      .text {
-        position: absolute;
-        top: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #fff;
-        font-size: 14px;
-        background: #484848;
-        width: 100%;
-        padding: 4px 0;
+      > span {
+        margin-top: 48px;
+        font-size: 18px;
+        color: #FEDD71;
       }
     }
-  }
-  .dividers {
-    width: 500px;
-    padding: 0 40px;
-    box-sizing: border-box;
-    .inner {
-      display: flex;
-      width: 100%;
-      > .rect {
-        flex: 1;
-        height: 45px;
-        border-left: 1px solid #1a1a1a;
-        border-bottom: 1px solid #1a1a1a;
-        &:last-child {
-          border-right: 1px solid #1a1a1a;
-        }
-      }
-    }
-  }
-  .attrs {
-    margin-top: 20px;
   }
 }
+
+
+// .content {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   .divider {
+//     height: 45px;
+//     width: 1px;
+//     background: #1a1a1a;
+//   }
+//   .synthesize {
+//     position: relative;
+//     display: flex;
+//     align-items: center;
+//     &::before {
+//       position: absolute;
+//     }
+//     &::after {
+//       position: absolute;
+//       bottom: 0;
+//       right: -40px;
+//       background: #484848;
+//       height: 1px;
+//       width: 40px;
+//     }
+//     .panel {
+//       position: relative;
+//       display: flex;
+//       flex-direction: column;
+//       align-items: center;
+//       justify-content: center;
+//       margin-right: 60px;
+//       &:last-child {
+//         margin-right: 0;
+//       }
+//       .text {
+//         position: absolute;
+//         top: 80px;
+//         left: 50%;
+//         transform: translateX(-50%);
+//         color: #fff;
+//         font-size: 14px;
+//         background: #484848;
+//         width: 100%;
+//         padding: 4px 0;
+//       }
+//     }
+//   }
+//   .dividers {
+//     width: 500px;
+//     padding: 0 40px;
+//     box-sizing: border-box;
+//     .inner {
+//       display: flex;
+//       width: 100%;
+//       > .rect {
+//         flex: 1;
+//         height: 45px;
+//         border-left: 1px solid #1a1a1a;
+//         border-bottom: 1px solid #1a1a1a;
+//         &:last-child {
+//           border-right: 1px solid #1a1a1a;
+//         }
+//       }
+//     }
+//   }
+//   .attrs {
+//     margin-top: 20px;
+//   }
+// }

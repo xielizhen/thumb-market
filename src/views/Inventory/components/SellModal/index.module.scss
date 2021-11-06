@@ -1,21 +1,67 @@
 :global {
   .sell-modal {
-    .ant-modal-header {
-      text-align: center;
-      border-bottom: none;
+    .ant-modal {
+      top: 100px;
     }
-    .sell-input {
-      background: #303030;
+    .ant-modal-content {
+      background: url(../../../../assets/account-modal.webp) no-repeat center;
+      background-size: 100%;
+      width: 668px;
+      height: 391px;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    .ant-modal-body {
+      padding: 0;
+    }
+    .ant-modal-close {
+      top: -35px;
+      right: -35px;
+    }
+    .ant-modal-close-x {
+      width: 74px;
+      height: 74px;
+      line-height: 74px;
+      > img {
+        width: 100%;
+      }
     }
   }
 }
+
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .input {
+  padding: 28px 38px 38px 38px;
+  .title {
+    color: #FEDD71;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 7px 19px;
+    border-bottom: 1px solid #DABC66;
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 7px;
+  }
+  .desc {
     display: flex;
     align-items: center;
-    margin-top: 34px;
+    justify-content: center;
+    .left {
+      transform: scale(0.4);
+    }
+    .right {
+      margin-left: 32px;
+      .input {
+        display: flex;
+        align-items: center;
+        margin-top: 21px;
+      }
+      .sell-input {
+        width: 258px;
+        margin-right: 24px;
+      }
+    }
   }
 }

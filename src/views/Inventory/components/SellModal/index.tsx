@@ -7,7 +7,10 @@ import useWeb3 from 'hooks/useWeb3';
 import { useWeb3React } from '@web3-react/core';
 import { useAddFormAssets } from 'state/account/hooks'
 import { useSafeState } from 'ahooks'
-import ImgContainer from 'components/ImgContainer';
+
+import ConfirmBtn, { EnumBtnType } from 'components/ConfirmBtn';
+import EquimentItem from 'components/EquimentItem';
+import CloseIcon from 'assets/close.webp';
 
 import styles from './index.module.scss'
 import { getBitBowStoreAddress } from 'utils/addressHelpers';
@@ -30,6 +33,7 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel }) => {
   const [disabled, setDisabled] = useSafeState(true)
 
   const handleConfirm = async () => {
+    if (!amount) return
     try {
       setLoading(true)
 
@@ -100,36 +104,50 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel }) => {
 
   return (
     <Modal
-      className='sell-modal'
-      title="Sell Death Bow"
-      centered
-      footer={null}
+      wrapClassName="sell-modal"
+      width={668}
+      title={null}
       visible={visible}
+      footer={null}
+      closable
+      closeIcon={
+        <img src={CloseIcon} alt='' />
+      }
       onCancel={onCancel}
-      okText="确认"
-      cancelText="取消"
     >
       <div className={cx('content')}>
-        <ImgContainer imgSrc={asset?.imgSrc} />
-        <label className={cx('input')}>
-          price
-          <Input
-            className={cx('sell-input')}
-            style={{ margin: '0 16px' }}
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+        <div className={cx('title')}>Sell Death Bow</div>
+        <div className={cx('body')}>
+          <div className={cx('desc')}>
+            <div className={cx('left')}>
+              <EquimentItem
+                type={asset?.type}
+                quality={asset?.displayProperties.quality}
+                imgUrl={asset?.imgSrc}
+                properties={asset?.displayProperties}
+              />
+            </div>
+            <div className={cx('right')}>
+              <div className={cx('name')}>Price</div>
+              <div className={cx('input')}>
+                <Input
+                  className={cx('sell-input')}
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+                Arrows
+              </div>
+            </div>
+          </div>
+          <ConfirmBtn
+            btnType={EnumBtnType.SMALL}
+            style={{ width: isApproved ? '220px' : '160px' }}
+            title={ isApproved ? 'List it on market': 'Approve it' }
+            onClick={ isApproved ? handleConfirm : handleApprove}
+            disabled={disabled}
+            loading={loading}
           />
-          arrows
-        </label>
-        <Button
-          style={{marginTop: '48px'}}
-          loading={loading}
-          type="primary"
-          disabled={disabled}
-          onClick={ isApproved ? handleConfirm : handleApprove}
-        >
-          { isApproved ? 'List it on market': 'Approve it' }
-        </Button>
+        </div>
       </div>
     </Modal>
   )

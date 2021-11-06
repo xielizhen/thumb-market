@@ -25,26 +25,50 @@ export interface BitBowItem {
   imgSrc: string
 }
 
-export const QualityTypes = [
+export enum EnumQuality {
+  N = 1,
+  R = 2,
+  SR = 3,
+  SSR = 4,
+  NR = 5
+}
+export interface IQualityType {
+  label: string
+  value: EnumQuality,
+  className?: string,
+  fill?: string
+}
+
+export const QualityTypes: IQualityType[] = [
   {
     label: 'Normal',
-    value: 1
+    value: 1,
+    className: 'n-type',
+    fill: '#DBD9DA'
   },
   {
     label: 'Rare',
-    value: 2
+    value: 2,
+    className: 'r-type',
+    fill: '#69DC84'
   },
   {
     label: 'Super Rare',
-    value: 3
+    value: 3,
+    className: 'sr-type',
+    fill: '#00A1E0'
   },
   {
     label: 'Super Super Rare',
-    value: 4
+    value: 4,
+    className: 'ssr-type',
+    fill: '#E099FF'
   },
   {
     label: 'Ultra Rare',
-    value: 5
+    value: 5,
+    className: 'ur-type',
+    fill: '#FFD863'
   }
 ]
 

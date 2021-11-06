@@ -6,9 +6,15 @@ import styles from './index.module.scss'
 
 const cx = classNames.bind(styles)
 
+export enum EnumBtnType {
+  BIG = 'big',
+  SMALL = 'small'
+}
+
 interface IProps {
   title: string;
   onClick: () => Promise<void> | void;
+  btnType?: EnumBtnType,
   disabled?: boolean,
   loading?: boolean,
   style?: CSSProperties,
@@ -17,6 +23,7 @@ interface IProps {
 
 const ConfirmBtn: React.FC<IProps> = ({
   title,
+  btnType = EnumBtnType.BIG,
   onClick,
   disabled = false,
   loading = false,
@@ -26,7 +33,7 @@ const ConfirmBtn: React.FC<IProps> = ({
   return (
     <div
       onClick={() => !disabled && onClick()}
-      className={cx('btn', { disabled }, className)}
+      className={cx('btn', { disabled }, className, btnType)}
       style={style}
     >
       { loading && <LoadingOutlined style={{marginRight: '10px'}} /> }

@@ -2,22 +2,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 470px;
-  height: 130px;
-  background: url(../../assets/btn-large.webp) no-repeat center;
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: 100% 100%;
-  font-size: 24px;
   color: #291C44;
   font-weight: bold;
-  transform: opacity .3s linear;
   cursor: pointer;
+  &.big {
+    background-image: url(../../assets/btn-large.webp);
+    width: 470px;
+    height: 130px;
+    font-size: 24px;
+    &.disabled {
+      background-image: url(../../assets/btn-large-disabled.webp);
+      color: #676767;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
+  &.small {
+    background-image: url(../../assets/btn-small.webp);
+    width: 169px;
+    height: 48px;
+    font-size: 18px;
+    &.disabled {
+      background-image: url(../../assets/btn-small-disabled.webp);
+      color: #676767;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
   &:hover, &:active {
     opacity: .9;
-  }
-  &.disabled {
-    background-image: url(../../assets/btn-large-disabled.webp);
-    color: #676767;
-    pointer-events: none;
-    cursor: not-allowed;
   }
 }
