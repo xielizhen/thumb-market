@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 import useAuth from 'hooks/useAuth';
 import { useAccount, useAllAssets, useGetUserInfo } from 'state/account/hooks';
 
-import avtarImg from 'assets/avtar.webp';
+import HeadImg from 'assets/head.webp';
 import { AssetsIcon } from 'components/Svg';
 import styles from './index.module.scss';
 import config from '../config'
@@ -25,29 +25,38 @@ const Account: React.FC = ({ children }) => {
 
   return (
     <div className={cx('account-container')}>
-      <div className={cx('account-header')}>
+      <div className={cx('left')}>
         <div className={cx('info-container')}>
-          <>
-            <img className={cx('avtar')} src={avtarImg} alt="头像" />
-            <div className={cx('info')}>
-              <p className={cx('name')}>{userInfo.isRegister ? userInfo.name : account?.slice(-8)}</p>
-              {
+          {
+            account ? (
+              <>
+                <img className={cx('head')} src={HeadImg} />
+                <p className={cx('name')}>
+                  {userInfo.isRegister ? userInfo.name : account.slice(-8)}
+                </p>
+                {
                   userInfo.isRegister && <p className={cx('email')}>{userInfo.username}</p>
                 }
-            </div>
-          </>
-          <div className={cx('no-connect')}>
-
-          </div>
+              </>
+            ) : (
+              <>
+                <p className={cx('started')}>Get Started</p>
+                <p className={cx('icon-container')}>
+                  <AssetsIcon width="30px" />
+                </p>
+              </>
+            )
+          }
+          <Wallet style={{ margin: '20px 0 30px' }} login={login} logout={logout} account={account} />
         </div>
         <div className={cx('router-container')}>
-        {
+          {
             accountRoutes.map((route) => {
               const IconElement = route.icon
               const isActive = route.href === location.pathname
               return (
                 <NavLink key={route.label} className={cx('link', { 'active': isActive })} to={route.href}>
-                  <IconElement style={{ marginRight: '12px' }} width="18px" fill={isActive? '#FEDD71': '#7474AA'} />
+                  <IconElement style={{ marginRight: '12px' }} width="18px" fill={isActive? '#63CCEA': '#9F9F9F'} />
                   {route.label}
                 </NavLink>
               )
@@ -55,8 +64,10 @@ const Account: React.FC = ({ children }) => {
           }
         </div>
       </div>
-      <div className={cx('inner')}>
-        {children}
+      <div className={cx('right')}>
+        {
+          account ? (children): <div className={cx('no-account')}>Please Connect Wallet First!</div>
+        }
       </div>
     </div>
   )

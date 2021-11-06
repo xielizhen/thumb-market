@@ -9,7 +9,6 @@ import useApproveArrow from 'hooks/useApproveArrow';
 import { getBitBowFactoryContract } from 'utils/contractHelpers';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchClubCount } from 'state/account/fetch';
-import ImgContainer from 'components/ImgContainer';
 import { getBitBowFactoryAddress } from 'utils/addressHelpers';
 
 import TargetIcon from 'assets/target.webp';
@@ -65,65 +64,61 @@ const AccountAssets: React.FC = () => {
 
   return (
     <div className={cx('assets-container')}>
-      <div className={cx('header')}>
-        <div className={cx('title')}>Wallet</div>
-        <div className={cx('account')}>Metamask：{accountEllipsis}</div>
-      </div>
-      <div className={cx('panels')}>
-        <div className={cx('panel')}>
-          <ImgContainer
-            imgSrc={ArrowsIcon}
-            containerStyle={{width: '100px', height: '100px'}}
-            imgStyle={{maxWidth: '60%'}}
-          />
-          <div className={cx('name')}>{assets.arrowNum} Arrows</div>
-        </div>
-        <div className={cx('panel')}>
-        <ImgContainer
-          imgSrc={TargetIcon}
-          containerStyle={{width: '100px', height: '100px'}}
-          imgStyle={{maxWidth: '60%'}}
-        />
-          <div className={cx('name')}>{assets.targetNum} Targets</div>
-        </div>
-        <div className={cx('panel')}>
-          <ImgContainer
-            imgSrc={BnbIcon}
-            containerStyle={{width: '100px', height: '100px'}}
-            imgStyle={{maxWidth: '60%'}}
-          />
-          <div className={cx('name')}>{new BigNumber(assets.BNBNum).toFixed(3)} BNB</div>
-        </div>
-      </div>
-
-      <div className={cx('panels')}>
-        {
-          BitBowTypes.map((item) => (
-            <div className={cx('panel')} key={item.value}>
-              <ImgContainer
-                imgSrc={item.imgSrc}
-                containerStyle={{width: '100px', height: '100px'}}
-                imgStyle={{maxWidth: '60%'}}
-              />
-              <div className={cx('name')}>
-                {formAssets.find(o => o.type === item.value)?.assets.length || 0} {item.label}s
-              </div>
-            </div>
-          ))
-        }
-      </div>
-      <div style={{marginTop: '50px'}}>
-        Club Count：{clubCount}
+      {/* 钱包信息 */}
+      <div className={cx('header')}>Wallet</div>
+      <div className={cx('account-info')}>
+        <span>Metamask：{accountEllipsis}</span>
+        <span
+          style={{margin: '0 40px 0 55px'}}>
+            Club Count：
+            <b style={{ color: '#FEDD71'}}>
+              {clubCount}
+            </b>
+        </span>
         <Button
-          size="large"
+          size="small"
           loading={loading}
           disabled={disabled}
-          style={{marginLeft: '20px'}}
           type="primary"
+          ghost
           onClick={isApproved ? handleBuyClub : handleApprove}
         >
           { isApproved ? 'Buy a club': 'Approve it'}
         </Button>
+      </div>
+
+      {/* 余额 */}
+      <div className={cx('money-panels')}>
+        <div className={cx('money-panel', 'arrows')}>
+          <span>Arrows</span>
+          <span className={cx('num')}>{assets.arrowNum}</span>
+          <img src={ArrowsIcon} alt="arrows img" />
+        </div>
+        <div className={cx('money-panel', 'target')}>
+          <span>Targets</span>
+          <span className={cx('num')}>{assets.targetNum}</span>
+          <img src={TargetIcon} alt="targets img" />
+        </div>
+        <div className={cx('money-panel', 'bnb')}>
+          <span>BNB</span>
+          <span className={cx('num')}>{new BigNumber(assets.BNBNum).toFixed(3)}</span>
+          <img src={BnbIcon} alt="bnb img" />
+        </div>
+      </div>
+
+      {/* 装备数量 */}
+      <div className={cx('assets-panels')}>
+        {
+          BitBowTypes.map((item) => (
+            <div className={cx('asset-panel')} key={item.value}>
+              <img className={cx('asset-img')} src={item.imgSrc} alt="img" />
+              <div className={cx('asset-info')}>
+                <div>{item.label}s</div>
+                <div className={cx('num')}>{formAssets.find(o => o.type === item.value)?.assets.length || 0}</div>
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
   )

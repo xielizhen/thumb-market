@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Button } from 'antd';
+import { Layout } from 'antd';
 import classnames from 'classnames/bind';
 import { useLocation } from 'react-router';
 
@@ -12,38 +12,40 @@ const cx = classnames.bind(styles);
 
 const Layouts: React.FC = ({ children }) => {
   const location = useLocation();
-  
+
   return (
     <Layout className={cx('layout')}>
       <header className={cx('header')}>
-        <a
-          className={cx('logo-container')}
-          href='http://www.bitbow.net/'
-          target="_blank"
-          rel="noreferrer"
-        >
-          <img className={cx('logo')} src={logo} alt='logo' />
-        </a>
-        <div className={cx('right')}>
-        <Menu />
-        <Button
-          style={{marginLeft: '10px'}}
-          type="primary"
-          href="https://cloud.bitbow.net/web/index.html"
-          target="_blank"
-          size="large"
-          rel="noreferrer"
-        >
-          Play now
-        </Button>
+        <div className={cx('content-inner')}>
+          <a
+            className={cx('logo-container')}
+            href='http://www.bitbow.net/'
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img className={cx('logo')} src={logo} alt='logo' />
+          </a>
+          <div className={cx('right')}>
+            <Menu />
+            <a
+              className={cx('play-btn')}
+              target="_blank"
+              href="https://cloud.bitbow.net/web/index.html"
+              rel="noreferrer"
+            >
+              Play now
+            </a>
+          </div>
         </div>
       </header>
-      <main className={cx('content')}>
-        {
-          location.pathname.includes('account')
-            ? <AccountLayout> { children }</AccountLayout>
-            : children
-        }
+      <main>
+        <div className={cx('content-inner')}>
+          {
+            location.pathname.includes('account')
+              ? <AccountLayout> {children}</AccountLayout>
+              : children
+          }
+        </div>
       </main>
     </Layout>
   )

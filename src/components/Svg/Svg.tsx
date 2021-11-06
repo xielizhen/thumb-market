@@ -3,7 +3,7 @@ import styles from './index.module.scss';
 
 const Svg: React.FC<SvgProps>= ({
   color = 'text',
-  fill="#22C5FC",
+  fill="#7474AA",
   width = '20px',
   xmlns = 'http://www.w3.org/2000/svg',
   spin = false,

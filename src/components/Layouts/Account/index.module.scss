@@ -1,45 +1,33 @@
 .account-container {
-  display: flex;
-  .left {
-    width: 200px;
-    background: #1a1a1a;
-    min-height: calc(100vh - 80px);
+  .account-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #F7F7F7;
     .info-container {
       display: flex;
       align-items: center;
-      flex-direction: column;
-      border-bottom: 1px solid #63ccea;
-      .head {
-        width: 80px;
-        height: 80px;
-        margin-top: 40px;
+      .avtar {
+        width: 74px;
       }
-      .name {
-        color: #F7F7F7;
-        margin-top: 10px;
-      }
-      .email {
-        font-size: 12px;
-        margin-top: 10px;
-      }
-      .started {
-        margin-top: 40px;
-      }
-      .icon-container {
+      .info {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: #484848;
-        margin-top: 10px;
+        margin-left: 20px;
+        .name {
+          font-size: 20px;
+        }
+        .email {
+          font-size: 14px;
+          margin-top: 12px;
+        }
       }
     }
     .router-container {
       display: flex;
-      flex-direction: column;
-      color: #9F9F9F;
+      color: #7474AA;
+      align-self: flex-end;
       .link {
         display: flex;
         align-items: center;
@@ -50,20 +38,13 @@
           margin-right: 12px;
         }
         &.active {
-          background: #484848;
-          color: #63ccea;
+          color: #FEDD71;
+          font-weight: bold;
         }
       }
     }
   }
-  .right {
-    flex: 1;
-    padding: 30px;
-    .no-account {
-      margin-top: 100px;
-      font-size: 24px;
-      color: #fff;
-      text-align: center;
-    }
+  .inner {
+    padding-top: 24px;
   }
 }

@@ -1,28 +1,57 @@
-@import '../../styles/var.scss';
-
 .layout {
   height: 100%;
-  min-width: 1000px;
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 80px;
-    line-height: 80px;
-    padding: 0 50px;
-    background: $dark-background-color;
-    color: $active-text-color;
+    background: #120f24;
+    color: #fff;
+    .content-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+      line-height: 80px;
+    }
     .logo-container {
       display: flex;
       align-items: center;
+      justify-content: center;
       .logo {
-        color: $primary-color;
         width: 120px;
       }
     }
     .right {
       display: flex;
       align-items: center;
+      .play-btn {
+        display: block;
+        box-sizing: content-box;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 26px;
+        background: linear-gradient(180deg,#8a3ad8, #1f0f39);
+        border-radius: 20px;
+        font-family: Arial, Arial-Regular;
+        font-size: 18px;
+        transform: opacity .3s linear;
+        &:hover, &:active {
+          color: #fff;
+          opacity: .9;
+        }
+      }
+    }
+  }
+  .content-inner {
+    width: 1200px;
+    margin: 0 auto;
+  }
+  > main {
+    width: 100%;
+    height: calc(100% - 80px);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url(../../assets/background.webp);
+    overflow: auto;
+    .content-inner {
+      padding: 60px 0;
     }
   }
 }

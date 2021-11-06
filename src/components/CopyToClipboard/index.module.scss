@@ -1,10 +1,8 @@
-@import '../../styles/var.scss';
-
 .copy-container {
   position: relative;
   display: flex;
   align-items: center;
-  color: $primary-color;
+  color:#FABE32;
   cursor: pointer;
   &:hover {
     text-decoration: underline;
@@ -17,8 +15,8 @@
   right: 0;
   left: 0;
   text-align: center;
-  background-color: #191326;
-  color: #fff;
+  background-color: #fff;
+  color: #333;
   border-radius: 16px;
   opacity: 0.7;
 }
