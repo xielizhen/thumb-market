@@ -12,6 +12,7 @@ import { FormAssetProperty } from 'state/types';
 import { useAddFormAssets } from 'state/account/hooks';
 import { useSafeState, useInterval } from 'ahooks'
 import ImgContainer from 'components/ImgContainer';
+import ConfirmBtn from 'components/ConfirmBtn';
 
 import styles from './index.module.scss';
 import giftImg from 'assets/gift.webp'
@@ -52,6 +53,7 @@ const MysteryBox: React.FC = () => {
       setLoading(true)
       // 判断该地址是否领取过首次盲盒
       const isNft = await getBitBowNFTContract().methods.balanceOf(account).call();
+      console.log(isNft)
 
       // 抽取盲盒
       const receipt = await getBitBowFactoryContract(web3)
@@ -110,14 +112,22 @@ const MysteryBox: React.FC = () => {
   return (
     <div className={cx('mystery-box')}>
       <img src={giftImg} alt="" />
-      <div>
-        This blind box contains an {mystery.label} 
-        <br /> 
-        Cost for each attempt: {fee} Targets
-        <br />
-        Current round left: {leftTime}
+      <div className={cx('info')}>
+        This blind box contains an {mystery.label}. Cost for each attempt: {fee} Targets
+        <div className={cx('left-time')}>
+          Current round left: {leftTime}
+        </div>
       </div>
-      <Button
+
+      <ConfirmBtn
+        style={{marginTop: '16px'}}
+        title={isApproved ? 'Open it': 'Approve it' }
+        disabled={disabled}
+        loading={loading}
+        onClick={isApproved ? handleOpenMystery : handleApprove }
+      />
+
+      {/* <Button
         disabled={disabled}
         loading={loading}
         size="large"
@@ -125,7 +135,7 @@ const MysteryBox: React.FC = () => {
         onClick={isApproved ? handleOpenMystery : handleApprove }
       >
         { isApproved ? 'Open it': 'Approve it' }
-      </Button>
+      </Button> */}
      
       <Modal
         className='mystery-modal'
