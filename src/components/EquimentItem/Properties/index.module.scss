@@ -1,0 +1,31 @@
+.properties {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  &.bow {
+    margin-left: -6px;
+    > .item {
+      > span {
+        font-size: 12px;
+      }
+    }
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    > span {
+      margin-left: 6px;
+      font-size: 14px;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  img {
+    width: 16px;
+  }
+}

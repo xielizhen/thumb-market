@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, notification } from 'antd';
+import { Modal, notification } from 'antd';
 import classNames from 'classnames/bind';
 import { getBitBowFactoryContract, getBitBowNFTContract, getTargetContract } from 'utils/contractHelpers'
 import { getBitBowFactoryAddress, getBitBowNFTAddress } from 'utils/addressHelpers';
@@ -9,29 +9,37 @@ import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { MAX_UNIT_256 } from 'config';
 import { useSafeState } from 'ahooks'
-import { PropertiesByType } from 'components/EquimentItem'
+import Properties from 'components/EquimentItem/Properties';
+import ConfirmBtn, { EnumBtnType } from 'components/ConfirmBtn';
+import { EnumQuality } from 'utils/icon';
 
 import TargetIcon from 'assets/target.webp';
-import UnkownIcon from 'assets/unkown.webp';
 import SynthesizeIcon from 'assets/synthesize.webp';
 import CloseIcon from 'assets/close.webp';
 import FailIcon from 'assets/fail.webp';
-import NIcon from 'assets/UR.webp';
+import NIcon from 'assets/N.webp';
+import RIcon from 'assets/R.webp';
+import SRIcon from 'assets/SR.webp';
+import SSRIcon from 'assets/SSR.webp';
+import URcon from 'assets/UR.webp';
+
 
 import styles from './index.module.scss'
-import ConfirmBtn, { EnumBtnType } from 'components/ConfirmBtn';
 
 const cx = classNames.bind(styles)
+
+const qualityTransferIcon = {
+  [EnumQuality.N]: NIcon,
+  [EnumQuality.UR]: URcon,
+  [EnumQuality.R]: RIcon,
+  [EnumQuality.SSR]: SSRIcon,
+  [EnumQuality.SR]: SRIcon
+}
 
 enum Synthe {
   UNKOWN = 'UNKOWN',
   SUCCESS = 'SUCCESS',
   FAIL = 'FAIL'
-}
-
-const SyntheOptions = {
-  [Synthe.UNKOWN]: UnkownIcon,
-  [Synthe.FAIL]: FailIcon
 }
 interface IProps {
   visible: boolean,
@@ -185,34 +193,91 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
       <div className={cx('content')}>
         <div className={cx('title')}>Synthesize the following items?</div>
         <div className={cx('body')}>
-          <div className={cx('pos-first', 'pos')}>
-            <img className={cx('type')} src={NIcon} alt="type" />
-            <img className={cx('equiment-img')} src={checkedList[0]?.imgSrc} alt="equiment-img" />
+          {
+            checkedList.map((o, index) => (
+              <div className={cx(`pos-${index + 1}`, 'pos')} key={o.id}>
+                {syntheStatus !== Synthe.SUCCESS && (
+                  <>
+                    <img
+                      className={cx('type')}
+                      src={qualityTransferIcon[o?.displayProperties?.quality || EnumQuality.N]}
+                      alt="type"
+                    />
+                    <img
+                      className={cx('equiment-img')}
+                      src={checkedList[index]?.imgSrc}
+                      alt="equiment-img"
+                    />
+                  </>
+                )}
+              </div>
+            ))
+          }
+
+          <div className={cx('target', 'pos')}>
+            {
+              syntheStatus === Synthe.UNKOWN && (
+                <>
+                  <img src={TargetIcon} alt="target icon" />
+                  <span>{targetAmount} Targets</span>
+                </>
+              )
+            }
           </div>
-          <div className={cx('pos-second', 'pos')}>
-            <img className={cx('type')} src={NIcon} alt="type" />
-            <img className={cx('equiment-img')} src={checkedList[1]?.imgSrc} alt="equiment-img" />
-          </div>
-          <div className={cx('pos-third', 'pos')}>
-            <img className={cx('type')} src={NIcon} alt="type" />
-            <img className={cx('equiment-img')} src={checkedList[2]?.imgSrc} alt="equiment-img" />
-          </div>
-          <div className={cx('target')}>
-            <img src={TargetIcon} alt="target icon" />
-            <span>{targetAmount} Targets</span>
-          </div>
-          <div className={cx('succ')}></div>
-          <div className={cx('succ-property')}></div>
-          <div className={cx('fail')}></div>
+          {
+            syntheStatus === Synthe.SUCCESS && (
+              <>
+                <div className={cx('succ')}>
+                  <img
+                    className={cx('type')}
+                    src={qualityTransferIcon[currentAsset?.displayProperties?.quality || EnumQuality.N]}
+                    alt="succes type icon"
+                  />
+                  <img
+                    className={cx('equiment-img')}
+                    src={currentAsset?.imgSrc}
+                    alt="success img"
+                  />
+                  <div className={cx('properties')}>
+                    <Properties
+                      type={currentAsset?.type}
+                      properties={currentAsset?.properties}
+                    />
+                  </div>
+                </div>
+              </>
+            )
+          }
+          {
+            syntheStatus === Synthe.FAIL && (
+              <img className={cx('fail-img')} src={FailIcon} alt="fail icon" />
+            )
+          }
         </div>
+
+        {/* 按钮合成逻辑 */}
         {
-          syntheStatus === Synthe.SUCCESS
-            ? <ConfirmBtn
+          syntheStatus === Synthe.SUCCESS && (
+            <ConfirmBtn
               title="Great"
+              btnType={EnumBtnType.SMALL}
               style={{ marginTop: '24px' }}
               onClick={onCancel}
             />
-            :
+          )
+        }
+        {
+          syntheStatus === Synthe.FAIL && (
+            <ConfirmBtn
+              title="Try again"
+              btnType={EnumBtnType.SMALL}
+              style={{ marginTop: '24px' }}
+              onClick={handleConfirm}
+            />
+          )
+        }
+        {
+          syntheStatus === Synthe.UNKOWN && (
             <ConfirmBtn
               style={{ marginTop: '24px' }}
               btnType={EnumBtnType.SMALL}
@@ -221,6 +286,7 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
               disabled={disabled}
               loading={loading}
             />
+          )
         }
       </div>
     </Modal>

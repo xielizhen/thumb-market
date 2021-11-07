@@ -23,9 +23,9 @@ export interface ICheckedItem extends FormAssetProperty {
 const InventoryTab: React.FC<IProps> = ({ assets }) => {
   const { formAssets } = useAccount()
   const { updateFormAssets } = useAddFormAssets();
-  const [ checkboxList, setcheckboxList ] = useState<ICheckedItem[]>([])
-  const [ sellModalVisible, setSellModalVisible ] = useState(false)
-  const [ syntheModalVisible, setSyntheModalVisible ] = useState(false)
+  const [checkboxList, setcheckboxList] = useState<ICheckedItem[]>([])
+  const [sellModalVisible, setSellModalVisible] = useState(false)
+  const [syntheModalVisible, setSyntheModalVisible] = useState(false)
 
   const totalEquiments = useMemo(() => {
     return formAssets.reduce((curr, prev) => {
@@ -124,12 +124,12 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
                   imgUrl={tab.imgSrc}
                   properties={tab.displayProperties}
                 />
-                { checked &&
+                {checked &&
                   <img
                     className={cx('correct-img')}
                     src={CorrectIcon}
                     alt="correct"
-                  /> 
+                  />
                 }
               </div>
             )
@@ -141,14 +141,18 @@ const InventoryTab: React.FC<IProps> = ({ assets }) => {
         asset={checkedList[0]}
         onCancel={() => setSellModalVisible(false)}
       />
-      <SynthesizeModal
-        visible={syntheModalVisible}
-        checkedList={checkedList}
-        onCancel={() => {
-          setSyntheModalVisible(false)
-          updateFormAssets()
-        }}
-      />
+      {
+        syntheModalVisible && (
+          <SynthesizeModal
+            visible={syntheModalVisible}
+            checkedList={checkedList}
+            onCancel={() => {
+              setSyntheModalVisible(false)
+              updateFormAssets()
+            }}
+          />
+        )
+      }
     </div>
   )
 }

@@ -30,7 +30,7 @@ export enum EnumQuality {
   R = 2,
   SR = 3,
   SSR = 4,
-  NR = 5
+  UR = 5
 }
 export interface IQualityType {
   label: string
@@ -42,31 +42,31 @@ export interface IQualityType {
 export const QualityTypes: IQualityType[] = [
   {
     label: 'Normal',
-    value: 1,
+    value: EnumQuality.N,
     className: 'n-type',
     fill: '#DBD9DA'
   },
   {
     label: 'Rare',
-    value: 2,
+    value: EnumQuality.R,
     className: 'r-type',
     fill: '#69DC84'
   },
   {
     label: 'Super Rare',
-    value: 3,
+    value: EnumQuality.SR,
     className: 'sr-type',
     fill: '#00A1E0'
   },
   {
     label: 'Super Super Rare',
-    value: 4,
+    value: EnumQuality.SSR,
     className: 'ssr-type',
     fill: '#E099FF'
   },
   {
     label: 'Ultra Rare',
-    value: 5,
+    value: EnumQuality.UR,
     className: 'ur-type',
     fill: '#FFD863'
   }
