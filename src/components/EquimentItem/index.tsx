@@ -10,8 +10,8 @@ import WeightIcon from 'assets/weight.webp';
 import StabilityIcon from 'assets/stability.webp';
 import WindResistIcon from 'assets/windResist.webp';
 import FovIcon from 'assets/fov.webp';
-import CoinBonusIcon from 'assets/coinBonus.png';
-import ExpBonusIcon from 'assets/expBonus.png';
+import CoinBonusIcon from 'assets/coinBonus.webp';
+import ExpBonusIcon from 'assets/expBonus.webp';
 
 import styles from './index.module.scss'
 

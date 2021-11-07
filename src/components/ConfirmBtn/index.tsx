@@ -32,7 +32,7 @@ const ConfirmBtn: React.FC<IProps> = ({
 }) => {
   return (
     <div
-      onClick={() => !disabled && onClick()}
+      onClick={() => !disabled && !loading && onClick()}
       className={cx('btn', { disabled }, className, btnType)}
       style={style}
     >

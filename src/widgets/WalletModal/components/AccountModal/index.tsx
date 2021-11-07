@@ -39,7 +39,7 @@ const AccountModal: React.FC<IProps> = ({ visible, onCancel, logout, onDismiss, 
           <div className={cx('info')}>
             <a className={cx('view')} href={`https://bscscan.com/address/${account}`} target="_blank">
               View on BscScan
-              <OpenNewIcon width="20px" />
+              <OpenNewIcon width="20px" fill="#FABE32" />
             </a>
             <CopyToClipboard toCopy={account}>Copy Address</CopyToClipboard>
           </div>

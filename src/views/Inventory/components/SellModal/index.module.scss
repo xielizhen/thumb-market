@@ -49,10 +49,10 @@
     align-items: center;
     justify-content: center;
     .left {
-      transform: scale(0.4);
+      transform: scale(0.5);
     }
     .right {
-      margin-left: 32px;
+      margin-left: -10px;
       .input {
         display: flex;
         align-items: center;
