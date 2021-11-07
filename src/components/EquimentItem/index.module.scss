@@ -1,7 +1,5 @@
 .equiment-container {
   position: relative;
-  width: 206px;
-  height: 243px;
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
@@ -20,22 +18,81 @@
   }
   &.n-type {
     background-image: url(../../assets/n-bg.webp);
+    width: 206px;
+    height: 243px;
+    .icon {
+      bottom: 14px;
+      right: 8px;
+    }
   }
   &.r-type {
     background-image: url(../../assets/r-bg.webp);
+    width: 204px;
+    height: 242px;
+    .icon {
+      bottom: 14px;
+      right: 8px;
+    }
   }
   &.sr-type {
     background-image: url(../../assets/sr-bg.webp);
+    width: 214px;
+    height: 244px;
+    .icon {
+      bottom: 16px;
+      right: 16px;
+    }
   }
   &.ssr-type {
     background-image: url(../../assets/ssr-bg.webp);
+    width: 224px;
+    height: 244px;
+    .icon {
+      bottom: 16px;
+      right: 21px;
+    }
   }
   &.ur-type {
     background-image: url(../../assets/ur-bg.webp);
+    width: 223px;
+    height: 252px;
+    .icon {
+      bottom: 16px;
+      right: 24px;
+    }
   }
   .icon {
     position: absolute;
-    bottom: 14px;
-    right: 8px;
+  }
+  .properties {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    &.bow {
+      margin-left: -6px;
+      > .item {
+        > span {
+          font-size: 12px;
+        }
+      }
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+      > span {
+        margin-left: 6px;
+        font-size: 14px;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    img {
+      width: 16px;
+    }
   }
 }
