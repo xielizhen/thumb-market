@@ -89,9 +89,9 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
 
       if (id !== undefined) {
         // 合成成功
-        setSyntheStatus(Synthe.SUCCESS)
         const asset = await fetchPropertiesById(String(id))
         setCurrentAsset(asset)
+        setSyntheStatus(Synthe.SUCCESS)
       } else {
         // 合成失败
         setSyntheStatus(Synthe.FAIL)
@@ -272,6 +272,8 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
               title="Try again"
               btnType={EnumBtnType.SMALL}
               style={{ marginTop: '24px' }}
+              disabled={disabled}
+              loading={loading}
               onClick={handleConfirm}
             />
           )

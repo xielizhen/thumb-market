@@ -41,7 +41,7 @@
   }
   .body {
     position: relative;
-    width: 773px;
+    width: 554px;
     height: 393px;
     background: url(../../../../assets/synthesize.webp) no-repeat center;
     background-size: 100% 100%;
@@ -49,8 +49,8 @@
     .pos {
       position: absolute;
       background: url(../../../../assets/icon-bg.webp) no-repeat center;
-      width: 140px;
-      height: 140px;
+      width: 135px;
+      height: 135px;
       background-size: 100% 100%;
       .type {
         position: absolute;
@@ -68,21 +68,21 @@
       }
     }
     .pos-1 {
-      top: 20px;
-      left: 20px;
+      top: 22px;
+      left: -89px;
     }
     .pos-2 {
-      top: 20px;
-      right: 20px;
+      top: 22px;
+      right: -86px;
     }
     .pos-3 {
-      left: 84px;
-      bottom: 24px;
+      left: -25px;
+      bottom: 29px;
     }
     .target {
-      background-image: url(../../../../assets/icon-bg.webp);
-      bottom: 24px;
-      right: 84px;
+      background-image: url(../../../../assets/icon-bg-yellow.webp);
+      bottom: 29px;
+      right: -26px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -100,7 +100,8 @@
     .fail-img {
       position: absolute;
       top: 91px;
-      left: 320px;
+      left: 50%;
+      transform: translateX(-50%);
       width: 149px;
     }
     .succ {

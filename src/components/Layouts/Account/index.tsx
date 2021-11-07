@@ -80,7 +80,13 @@ const Account: React.FC = ({ children }) => {
         </div>
       </div>
       <div className={cx('inner')}>
-        {children}
+        {
+          account ? children : (
+            <div className={cx('no-account')}>
+                Please Connect Wallet First！
+            </div>
+          )
+        }
       </div>
       <AccountModal
         visible={accountModalVisible}

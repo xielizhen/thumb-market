@@ -90,7 +90,7 @@ const Properties: React.FC<{
     type: BitBowTypeEnum,
     properties: {[key: string]: any}
 }> = ({ type, properties}) => {
-  const { renderProperties } = PropertiesByType.find(o => o.type === type)
+  const { renderProperties } = PropertiesByType.find(o => +o.type === +type)
   return (
     <>
       {renderProperties?.(properties)}

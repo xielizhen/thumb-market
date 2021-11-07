@@ -51,4 +51,13 @@
   .inner {
     padding-top: 24px;
   }
+  .no-account {
+    height: 670px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #120f24;
+    box-shadow: 0px 11px 12px -6px rgba(18,10,38,0.70); 
+    font-size: 24px;
+  }
 }
