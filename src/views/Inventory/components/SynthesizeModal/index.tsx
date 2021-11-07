@@ -9,12 +9,15 @@ import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { MAX_UNIT_256 } from 'config';
 import { useSafeState } from 'ahooks'
+import { PropertiesByType } from 'components/EquimentItem'
 
 import TargetIcon from 'assets/target.webp';
 import UnkownIcon from 'assets/unkown.webp';
 import SynthesizeIcon from 'assets/synthesize.webp';
 import CloseIcon from 'assets/close.webp';
 import FailIcon from 'assets/fail.webp';
+import NIcon from 'assets/UR.webp';
+
 import styles from './index.module.scss'
 import ConfirmBtn, { EnumBtnType } from 'components/ConfirmBtn';
 
@@ -167,83 +170,6 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
   }, [checkedList])
 
   return (
-    // <Modal
-    //   className='synthesize-modal'
-    //   title="Synthesize the following items?"
-    //   centered
-    //   width={690}
-    //   footer={null}
-    //   visible={visible}
-    //   onCancel={onCancel}
-    //   okText="确认"
-    //   cancelText="取消"
-    // >
-    //   <div className={cx('content')}>
-    //     <div className={cx('synthesize')}>
-    //       {
-    //         checkedList.map((item) => (
-    //           <div className={cx('panel')} key={item.id}>
-    //             <ImgContainer
-    //               imgSrc={item.imgSrc}
-    //             />
-    //           </div>
-    //         ))
-    //       }
-    //       <div className={cx('panel')}>
-    //         <ImgContainer
-    //           imgSrc={TargetIcon}
-    //           imgStyle={{width: '40px'}}
-    //         />
-    //         <div className={cx('text')}>{targetAmount} Targets</div>
-    //       </div>
-    //     </div>
-    //     <div className={cx('dividers')}>
-    //       <div className={cx('inner')}>
-    //         {
-    //           checkedList.map((item) => (
-    //             <div className={cx('rect')} key={item.id}></div>
-    //           ))
-    //         }
-    //       </div>
-    //     </div>
-    //     <div className={cx('divider')}></div>
-    //     <ImgContainer
-    //       imgSrc={syntheStatus === Synthe.SUCCESS 
-    //         ? currentAsset?.imgSrc
-    //         : SyntheOptions[syntheStatus]
-    //       }
-    //     />
-    //     {
-    //       syntheStatus === Synthe.SUCCESS && (
-    //         <div className={cx('attrs')}>
-    //           {
-    //             Object.entries(currentAsset?.displayProperties || [])?.map(([key, value]) => (
-    //               <p key={key}>{key}: {value}</p>
-    //             ))
-    //           }
-    //         </div>
-    //       )
-    //     }
-    //     {syntheStatus === Synthe.SUCCESS ?
-    //       <Button 
-    //         style={{ marginTop: '48px' }}
-    //         type="primary"
-    //         onClick={onCancel}
-    //       >
-    //         Great
-    //       </Button>
-    //       :
-    //       <Button
-    //         style={{ marginTop: '48px' }}
-    //         loading={loading}
-    //         type="primary"
-    //         disabled={disabled}
-    //         onClick={isApproved ? handleConfirm : handleApprove}
-    //       >
-    //         {isApproved ? ' Do it now' : 'Approve it'}
-    //       </Button>}
-    //   </div>
-    // </Modal>
     <Modal
       wrapClassName="synthesize-modal"
       width={1009}
@@ -259,9 +185,18 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
       <div className={cx('content')}>
         <div className={cx('title')}>Synthesize the following items?</div>
         <div className={cx('body')}>
-          <div className={cx('pos-first')}></div>
-          <div className={cx('pos-second')}></div>
-          <div className={cx('pos-third')}></div>
+          <div className={cx('pos-first', 'pos')}>
+            <img className={cx('type')} src={NIcon} alt="type" />
+            <img className={cx('equiment-img')} src={checkedList[0]?.imgSrc} alt="equiment-img" />
+          </div>
+          <div className={cx('pos-second', 'pos')}>
+            <img className={cx('type')} src={NIcon} alt="type" />
+            <img className={cx('equiment-img')} src={checkedList[1]?.imgSrc} alt="equiment-img" />
+          </div>
+          <div className={cx('pos-third', 'pos')}>
+            <img className={cx('type')} src={NIcon} alt="type" />
+            <img className={cx('equiment-img')} src={checkedList[2]?.imgSrc} alt="equiment-img" />
+          </div>
           <div className={cx('target')}>
             <img src={TargetIcon} alt="target icon" />
             <span>{targetAmount} Targets</span>
@@ -270,14 +205,23 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
           <div className={cx('succ-property')}></div>
           <div className={cx('fail')}></div>
         </div>
-        <ConfirmBtn
-          style={{marginTop: '24px'}}
-          btnType={EnumBtnType.SMALL}
-          title={isApproved ? ' Do it now' : 'Approve it'}
-          onClick={isApproved ? handleConfirm : handleApprove}
-          disabled={disabled}
-          loading={loading}
-        />
+        {
+          syntheStatus === Synthe.SUCCESS
+            ? <ConfirmBtn
+              title="Great"
+              style={{ marginTop: '24px' }}
+              onClick={onCancel}
+            />
+            :
+            <ConfirmBtn
+              style={{ marginTop: '24px' }}
+              btnType={EnumBtnType.SMALL}
+              title={isApproved ? ' Do it now' : 'Approve it'}
+              onClick={isApproved ? handleConfirm : handleApprove}
+              disabled={disabled}
+              loading={loading}
+            />
+        }
       </div>
     </Modal>
   )

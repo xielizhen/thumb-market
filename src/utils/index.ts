@@ -3,7 +3,6 @@ const checkStrong = (sValue: string): {
   mode: number,
   color: string,
 } => {
-  console.log(sValue)
   let modes = 0;
   if (sValue.length < 1) return {
     label: '密码太弱',

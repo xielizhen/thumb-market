@@ -26,8 +26,6 @@ const Inventory: React.FC = () => {
     setAssets(initAssets)
   }, [formAssets])
 
-  console.log(formAssets)
-
   return (
 
     <div className={cx('container')}>

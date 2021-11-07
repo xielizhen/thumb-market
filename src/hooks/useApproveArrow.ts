@@ -23,7 +23,6 @@ const useArrowApprove = (contractAddress: string) => {
         .methods
         .allowance(account, contractAddress)
         .call()
-      console.log(allownance)
       setIsApproved(+allownance > 1000)
     } finally {
       setDisabled(false)

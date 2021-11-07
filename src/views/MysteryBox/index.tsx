@@ -54,7 +54,6 @@ const MysteryBox: React.FC = () => {
       setLoading(true)
       // 判断该地址是否领取过首次盲盒
       const isNft = await getBitBowNFTContract().methods.balanceOf(account).call();
-      console.log(isNft)
 
       // 抽取盲盒
       const receipt = await getBitBowFactoryContract(web3)
@@ -77,7 +76,6 @@ const MysteryBox: React.FC = () => {
       // 根据id获取properties和img
       const asset = await fetchPropertiesById(String(id))
       setFormAsset(asset)
-      console.log(asset)
       setVisible(true)
 
       // 更新formAssets

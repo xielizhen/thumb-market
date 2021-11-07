@@ -46,6 +46,34 @@
     background: url(../../../../assets/synthesize.webp) no-repeat center;
     background-size: 100% 100%;
     margin-top: 63px;
+    .pos {
+      position: absolute;
+      .type {
+        position: absolute;
+        top: -12px;
+        left: -28px;
+        height: 26px;
+      }
+      .equiment-img {
+        max-width: 80px;
+        max-height: 80px;
+      }
+    }
+    .pos-first {
+      top: 50px;
+      left: 50px;
+    }
+    .pos-second {
+      top: 50px;
+      right: 50px;
+      .type {
+        left: -72px;
+      }
+    }
+    .pos-third {
+      left: 114px;
+      bottom: 56px;
+    }
     .target {
       position: absolute;
       right: 102px;
