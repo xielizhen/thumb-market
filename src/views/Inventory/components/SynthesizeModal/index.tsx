@@ -12,9 +12,9 @@ import { useSafeState } from 'ahooks'
 import Properties from 'components/EquimentItem/Properties';
 import ConfirmBtn, { EnumBtnType } from 'components/ConfirmBtn';
 import { EnumQuality } from 'utils/icon';
+import { useAccount } from 'state/account/hooks';
 
 import TargetIcon from 'assets/target.webp';
-import SynthesizeIcon from 'assets/synthesize.webp';
 import CloseIcon from 'assets/close.webp';
 import FailIcon from 'assets/fail.webp';
 import NIcon from 'assets/N.webp';
@@ -22,7 +22,6 @@ import RIcon from 'assets/R.webp';
 import SRIcon from 'assets/SR.webp';
 import SSRIcon from 'assets/SSR.webp';
 import URcon from 'assets/UR.webp';
-
 
 import styles from './index.module.scss'
 
@@ -49,6 +48,7 @@ interface IProps {
 const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) => {
   const web3 = useWeb3()
   const { account } = useWeb3React()
+  const { assets } = useAccount()
 
   const [targetAmount, setTargetAmount] = useSafeState(0)
   const [loading, setLoading] = useState(false)
@@ -71,7 +71,14 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
   }
 
   const handleConfirm = async () => {
+    if (assets.targetNum < targetAmount) {
+      return notification.info({
+        message: `Synthesize the following items need ${targetAmount} Targets`,
+        className: 'notification-info'
+      })
+    }
     try {
+      setSyntheStatus(Synthe.UNKOWN)
       setLoading(true)
       const ids = checkedList.map(o => +o.id)
       const type = checkedList[0].type
@@ -192,6 +199,10 @@ const SynthesizeModal: React.FC<IProps> = ({ visible, onCancel, checkedList }) =
     >
       <div className={cx('content')}>
         <div className={cx('title')}>Synthesize the following items?</div>
+        <div className={cx('status-info')}>
+          { syntheStatus === Synthe.SUCCESS  && `Congratulations!  You successfully synthesized a new ${currentAsset?.label}` }
+          { syntheStatus === Synthe.FAIL && 'Synthesization failed, try again?' }
+        </div>
         <div className={cx('body')}>
           {
             checkedList.map((o, index) => (

@@ -9,7 +9,7 @@ import { useWeb3React } from '@web3-react/core';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
-import { useAddFormAssets } from 'state/account/hooks';
+import { useAccount, useAddFormAssets } from 'state/account/hooks';
 import { useSafeState, useInterval } from 'ahooks';
 import useApproveArrow from 'hooks/useApproveArrow';
 
@@ -32,6 +32,7 @@ const MysteryBox: React.FC = () => {
   const { account } = useWeb3React()
   const web3 = useWeb3();
   const { updateFormAssets } = useAddFormAssets();
+  const { assets } = useAccount()
   const { loading, handleApprove, disabled, isApproved, setLoading } = useApproveArrow(getBitBowFactoryAddress())
 
   const [visible, setVisible] = useState(false)
@@ -50,6 +51,12 @@ const MysteryBox: React.FC = () => {
 
   // 抽取盲盒
   const handleOpenMystery = async () => {
+    if (assets.targetNum < fee) {
+      return notification.info({
+        message: `Open this blind box need ${fee} Targets`,
+        className: 'notification-info'
+      })
+    }
     try {
       setLoading(true)
       // 判断该地址是否领取过首次盲盒
@@ -123,8 +130,9 @@ const MysteryBox: React.FC = () => {
               imgUrl={formAsset?.imgSrc}
               properties={formAsset?.displayProperties}
             />
+            <div className={cx('txt')}>You received a {formAsset?.label}</div>
             <ConfirmBtn
-              style={{marginTop: '94px'}}
+              style={{marginTop: '60px'}}
               title="Great"
               onClick={() => setVisible(false)}
             />

@@ -119,7 +119,7 @@ const SellModal: React.FC<IProps> = ({ visible, asset, onCancel }) => {
       onCancel={onCancel}
     >
       <div className={cx('content')}>
-        <div className={cx('title')}>Sell Death Bow</div>
+        <div className={cx('title')}>Sell this Bow</div>
         <div className={cx('body')}>
           <div className={cx('desc')}>
             <div className={cx('left')}>

@@ -109,7 +109,7 @@ const Deposit: React.FC = () => {
               <div className={cx('title')}>From Wallet</div>
               <div className={cx('info')}>
                 <img className={cx('icon')} src={BnbLogoIcon} alt="BnbLogoIcon" />
-                <span className={cx('name')}>BNB Network</span>
+                <span className={cx('name')}>Your Wallet</span>
               </div>
               <div className={cx('addr')}>{accountEllipsis}
               </div>
@@ -122,7 +122,7 @@ const Deposit: React.FC = () => {
               <div className={cx('title')}>From Wallet</div>
               <div className={cx('info')}>
                 <img className={cx('icon')} src={TargetIcon} alt="TargetIcon" />
-                <span className={cx('name')}>Game address</span>
+                <span className={cx('name')}>Game Wallet</span>
               </div>
               <div className={cx('addr')}>{gameAccountEllipsis}
               </div>
