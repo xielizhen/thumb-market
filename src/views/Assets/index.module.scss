@@ -12,6 +12,19 @@
     font-size: 16px;
     margin-top: 16px;
   }
+
+  .free-bow-container {
+    display: flex;
+    align-items: center;
+    margin-top: 28px;
+    > img {
+      width: 65px;
+    }
+    .content {
+      color: #FF8600;
+      margin: 0 35px 0 24px;
+    }
+  }
   .money-panels {
     display: flex;
     align-items: center;

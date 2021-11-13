@@ -6,13 +6,14 @@ import { useWeb3React } from '@web3-react/core';
 import { useAccount } from 'state/account/hooks'
 import { BitBowTypes } from 'utils/icon';
 import useApproveArrow from 'hooks/useApproveArrow';
-import { getBitBowFactoryContract } from 'utils/contractHelpers';
+import { getBitBowFactoryContract, getBitBowNFTContract } from 'utils/contractHelpers';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchClubCount } from 'state/account/fetch';
 import { getBitBowFactoryAddress } from 'utils/addressHelpers';
 
 import TargetIcon from 'assets/target.webp';
 import ArrowsIcon from 'assets/arrows.webp';
+import GiftIcon from 'assets/gift-small.webp';
 import BnbIcon from 'assets/bnbLogo.webp';
 import styles from './index.module.scss';
 
@@ -30,8 +31,20 @@ const AccountAssets: React.FC = () => {
     [account]
   )
   const { loading, handleApprove, disabled, isApproved, setLoading } = useApproveArrow(getBitBowFactoryAddress());
+  const [claimLoading, setClaimLoading] = useState(false)
+  const [isFree, setIsFree] = useState(false)
 
   const [clubCount, setClubCount] = useState(0)
+
+  // buy a club所需费用
+  const getClubFee = async () => {
+    return await getBitBowFactoryContract().methods.clubFee().call();
+  }
+
+  const getIsFree = async () => {
+    const free = await getBitBowFactoryContract().methods.freeAddress(account).call()
+    setIsFree(free)
+  }
 
   const getClubCount = useCallback(async () => {
     if (!account) return
@@ -42,6 +55,13 @@ const AccountAssets: React.FC = () => {
   const handleBuyClub = useCallback(async () => {
     try {
       setLoading(true)
+      const fee = await getClubFee()
+      if (assets.arrowNum < +fee) {
+        return notification.info({
+          message: `Buy club need ${fee} Arrows`,
+          className: 'notification-info'
+        })
+      }
       await getBitBowFactoryContract(web3).methods.buyClub().send({
         from: account,
         gas: 500000
@@ -56,11 +76,32 @@ const AccountAssets: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [account, notification, web3])
+  }, [account, notification, web3, assets])
+
+  const handleClaim = useCallback(async () => {
+    try {
+      setClaimLoading(true)
+      await getBitBowFactoryContract(web3).methods.claimFreeBow().send({
+        from: account,
+        gas: 500000
+      })
+      await getIsFree()
+    } catch (e: any) {
+      notification.error({
+        message: 'Error',
+        description: e?.message,
+        className: 'notification-error'
+      })
+    } finally {
+      setClaimLoading(false)
+    }
+  }, [])
+
 
   useEffect(() => {
     getClubCount()
-  },[account])
+    getIsFree()
+  }, [account])
 
 
   return (
@@ -68,13 +109,13 @@ const AccountAssets: React.FC = () => {
       {/* 钱包信息 */}
       <div className={cx('header')}>Wallet</div>
       <div className={cx('account-info')}>
-        <span>Metamask：{accountEllipsis}</span>
+        <span>{accountEllipsis}</span>
         <span
-          style={{margin: '0 40px 0 55px'}}>
-            Club Count：
-            <b style={{ color: '#FEDD71'}}>
-              {clubCount}
-            </b>
+          style={{ margin: '0 40px 0 112px' }}>
+          Club Count：
+          <b style={{ color: '#FEDD71' }}>
+            {clubCount}
+          </b>
         </span>
         <Button
           size="small"
@@ -84,9 +125,26 @@ const AccountAssets: React.FC = () => {
           ghost
           onClick={isApproved ? handleBuyClub : handleApprove}
         >
-          { isApproved ? 'Buy a club': 'Approve it'}
+          {isApproved ? 'Buy a club' : 'Approve it'}
         </Button>
       </div>
+
+      {/* 是否有免费领取盲盒机会 */}
+      {isFree &&
+        <div className={cx('free-bow-container')}>
+          <img src={GiftIcon} alt="GiftIcon" />
+          <div className={cx('content')}>You have a free bow!</div>
+          <Button
+            size="small"
+            loading={claimLoading}
+            style={{ color: '#291C44' }}
+            type="primary"
+            onClick={handleClaim}
+          >
+            Claim
+          </Button>
+        </div>
+      }
 
       {/* 余额 */}
       <div className={cx('money-panels')}>

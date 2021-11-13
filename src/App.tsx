@@ -3,8 +3,8 @@ import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import BigNumber from 'bignumber.js'
 import Layout from 'components/Layouts'
 import SuspenseWithChunkError from 'components/SuspenseWithChunkError'
+import Loading from 'components/Loading'
 import useEagerConnect from 'hooks/useEagerConnect'
-import { Spin } from 'antd';
 import history from './routerHistory'
 
 // Route-based code splitting
@@ -29,7 +29,7 @@ const App: React.FC = () => {
   return (
     <Router history={history}>
       <Layout>
-        <SuspenseWithChunkError fallback={<Spin />}>
+        <SuspenseWithChunkError fallback={<Loading />}>
           <Switch>
             <Route path="/market" exact>
               <Marketplace />

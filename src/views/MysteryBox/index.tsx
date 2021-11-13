@@ -13,6 +13,7 @@ import { useAccount, useAddFormAssets } from 'state/account/hooks';
 import { useSafeState, useInterval } from 'ahooks';
 import useApproveArrow from 'hooks/useApproveArrow';
 
+import Loading from 'components/Loading';
 import ConfirmBtn from 'components/ConfirmBtn';
 import EquimentItem from 'components/EquimentItem';
 
@@ -40,6 +41,8 @@ const MysteryBox: React.FC = () => {
   const [mystery, setMystery] = useState(BitBowTypes[0])
   const [formAsset, setFormAsset] = useState<FormAssetProperty>()
   const [leftTime, setLeftTime] = useState('')
+  const [isFirst, setIsFirst] = useState(false)
+  const [pageLoading, setPageLoading] = useState(true)
 
   const nextSunday = moment().day(7).startOf('day')
 
@@ -49,23 +52,33 @@ const MysteryBox: React.FC = () => {
     setFee(fee)
   }
 
+  // 获取是否第一次抽盲盒
+  const getIsFirst = async () => {
+    try {
+      const isNft = await getBitBowNFTContract().methods.balanceOf(account).call();
+      setIsFirst(!Number(isNft))
+      setPageLoading(true)
+    } finally {
+      setPageLoading(false)
+    }
+  }
+
   // 抽取盲盒
   const handleOpenMystery = async () => {
-    if (assets.targetNum < fee) {
-      return notification.info({
-        message: `Open this blind box need ${fee} Targets`,
-        className: 'notification-info'
-      })
-    }
     try {
       setLoading(true)
-      // 判断该地址是否领取过首次盲盒
-      const isNft = await getBitBowNFTContract().methods.balanceOf(account).call();
-
+      await getMintFee();
+      // 判断是否
+      if (assets.arrowNum < fee) {
+        return notification.info({
+          message: `Open blind box need ${fee} Arrows`,
+          className: 'notification-info'
+        })
+      }
       // 抽取盲盒
       const receipt = await getBitBowFactoryContract(web3)
         .methods
-        .openMysteryBox(mystery.value, !isNft)
+        .openMysteryBox(mystery.value, isFirst)
         .send({
           gas: 500000,
           from: account
@@ -110,12 +123,14 @@ const MysteryBox: React.FC = () => {
   }, 1000, { immediate: true })
 
   useEffect(() => {
-    getMintFee()
+    getIsFirst()
   }, [account])
 
   useEffect(() => {
     setMystery(getMysteryItem())
   }, [])
+
+  if (pageLoading) return <Loading />
 
   return (
     <div className={cx('mystery-box')}>
@@ -124,7 +139,7 @@ const MysteryBox: React.FC = () => {
           <>
             <div className={cx('cong')}>Congratualations！</div>
             <EquimentItem
-              style={{marginTop: '63px'}}
+              style={{ marginTop: '63px' }}
               type={formAsset?.type}
               quality={formAsset?.displayProperties.quality}
               imgUrl={formAsset?.imgSrc}
@@ -132,7 +147,7 @@ const MysteryBox: React.FC = () => {
             />
             <div className={cx('txt')}>You received a {formAsset?.label}</div>
             <ConfirmBtn
-              style={{marginTop: '60px'}}
+              style={{ marginTop: '60px' }}
               title="Great"
               onClick={() => setVisible(false)}
             />
@@ -142,9 +157,13 @@ const MysteryBox: React.FC = () => {
             <img src={giftImg} alt="" />
             <div className={cx('info')}>
               This blind box contains an {mystery.label}. Cost for each attempt: {fee} Targets
-              <div className={cx('left-time')}>
-                Current round left: {leftTime}
-              </div>
+              {
+                !isFirst && (
+                  <div className={cx('left-time')}>
+                    Current round left: {leftTime}
+                  </div>
+                )
+              }
             </div>
             <ConfirmBtn
               style={{ marginTop: '16px' }}

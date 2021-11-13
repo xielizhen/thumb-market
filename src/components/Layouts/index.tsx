@@ -38,7 +38,7 @@ const Layouts: React.FC = ({ children }) => {
           </div>
         </div>
       </header>
-      <main>
+      <main id="main">
         <div className={cx('content-inner')}>
           {
             location.pathname.includes('account')
