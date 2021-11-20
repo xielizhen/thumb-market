@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Tabs, Select } from 'antd';
+import { Select } from 'antd';
 import classNames from 'classnames/bind';
 import { BitBowTypeEnum, BitBowTypes, QualityTypes } from 'utils/icon';
 import { useTotalAmount, useStoreList } from './hooks'
@@ -10,12 +10,12 @@ import Filter from './components/Filter';
 import MarketList from './components/List';
 import styles from './index.module.scss';
 import { StoreAsset } from 'state/types';
-import ConfirmBtn, { EnumBtnType } from 'components/ConfirmBtn';
+import Loading from 'components/Loading';
 
 const cx = classNames.bind(styles);
 
-const { TabPane } = Tabs;
 const { Option } = Select
+const MIN_TAB_NUM = 9
 
 interface IFilters {
   type: BitBowTypeEnum
@@ -59,7 +59,7 @@ const Marketplace: React.FC = () => {
   const [ filters, setFilters ] = useState<IFilters>({ type: BitBowTypeEnum.BOW })
   const [ sortType, setSortType ] = useState<string>(sortOptions[0].label)
   let { totalAmount, setTotalAmount } = useTotalAmount()
-  const { storeList, fetchStoreList, deleteStoreByTokenId } = useStoreList()
+  const { isLoading, storeList, fetchStoreList, deleteStoreByTokenId } = useStoreList()
 
   const handleTabChange = useCallback((val: number) => {
     setActiveKey(val)
@@ -96,16 +96,34 @@ const Marketplace: React.FC = () => {
     return filterList.sort(strategy)
   }, [storeList, filters, sortType, account])
 
+
   useEffect(() => {
     if (!totalAmount) return
-    fetchStoreList(totalAmount)
+    const len = storeList.filter(o => +o.type === +activeKey)?.length
+    if (len < MIN_TAB_NUM) fetchStoreList(totalAmount)
+  }, [totalAmount, activeKey, storeList, fetchStoreList])
 
-  }, [totalAmount])
+
+  useEffect(() => {
+    const dom = document.getElementById('main')
+    const handleScroll = debounce(async () => {
+      const scrollTop = dom.scrollTop
+      const clientHeight = dom.clientHeight
+      const scrollHeight = dom.scrollHeight
+      if (scrollTop + clientHeight === scrollHeight) {
+        await fetchStoreList(totalAmount)
+      }
+    }, 500)
+
+    dom.addEventListener('scroll', handleScroll)
+    return () => {
+      dom.removeEventListener('scroll', handleScroll)
+    }
+  }, [totalAmount, fetchStoreList])
 
 
   return (
     <div className={cx('market-container')}>
-
       <div className={cx('tabs')}>
         {
           BitBowTypes.map((tab) => {
@@ -147,11 +165,7 @@ const Marketplace: React.FC = () => {
               storeList.length === totalAmount ? (
                 <div className={cx('no-data')}>No more data</div>
               ) : (
-                <ConfirmBtn
-                  title="Show more"
-                  onClick={debounce(() => fetchStoreList(totalAmount), 2000)}
-                  btnType={EnumBtnType.SMALL}
-                />
+                isLoading && ( <Loading style={{marginTop: '0'}} />)
               )
             }
           </div>

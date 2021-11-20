@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { notification } from 'antd';
 import classNames from 'classnames/bind';
-import { BitBowTypes, BitBowItem } from 'utils/icon';
-import moment from 'moment';
+import { BitBowTypes, BitBowItem, BitBowTypeEnum } from 'utils/icon';
 import { getBitBowFactoryContract, getBitBowNFTContract } from 'utils/contractHelpers'
 import { getBitBowFactoryAddress, getBitBowNFTAddress } from 'utils/addressHelpers'
 import { useWeb3React } from '@web3-react/core';
@@ -10,24 +9,53 @@ import useWeb3 from 'hooks/useWeb3';
 import { fetchPropertiesById } from 'state/account/fetch';
 import { FormAssetProperty } from 'state/types';
 import { useAccount, useAddFormAssets } from 'state/account/hooks';
-import { useSafeState, useInterval } from 'ahooks';
+import multicall from 'utils/multicall';
+import BitBowFactoryAbi from 'config/abi/BitBowFactory.json';
+import { useSafeState } from 'ahooks';
 import useApproveArrow from 'hooks/useApproveArrow';
+import BigNumber from 'bignumber.js'
 
 import Loading from 'components/Loading';
 import ConfirmBtn from 'components/ConfirmBtn';
 import EquimentItem from 'components/EquimentItem';
 
-import styles from './index.module.scss';
-import giftImg from 'assets/gift.webp';
+import giftBowImg from 'assets/gift-bow.webp';
+import giftArrowImg from 'assets/gift-arrow.webp';
+import giftPeepSightImg from 'assets/gift-peep-sight.webp';
+import giftArmguardImg from 'assets/gift-armguard.webp';
+import stepLeftImg from 'assets/step-left.webp';
+import stepRightImg from 'assets/step-right.webp';
 
+import styles from './index.module.scss';
 
 const cx = classNames.bind(styles);
 
-const getMysteryItem = (): BitBowItem => {
-  const currentWeek = moment().week();
-  const len = BitBowTypes.length;
-  return BitBowTypes[currentWeek % len]
+interface IMysteryItem {
+  iconSrc: string,
+  type: BitBowTypeEnum
 }
+interface IFee {
+  type: BitBowTypeEnum,
+  value: number
+}
+const MYSTERY_OPTIONS: IMysteryItem[] = [
+  {
+    iconSrc: giftBowImg,
+    type: BitBowTypeEnum.BOW
+  },
+  {
+    iconSrc: giftArrowImg,
+    type: BitBowTypeEnum.ARROW
+  },
+  {
+    iconSrc: giftPeepSightImg,
+    type: BitBowTypeEnum.PEEP_SIGHT
+  },
+  {
+    iconSrc: giftArmguardImg,
+    type: BitBowTypeEnum.ARMGUARD
+  }
+]
 
 const MysteryBox: React.FC = () => {
   const { account } = useWeb3React()
@@ -37,26 +65,67 @@ const MysteryBox: React.FC = () => {
   const { loading, handleApprove, disabled, isApproved, setLoading } = useApproveArrow(getBitBowFactoryAddress())
 
   const [visible, setVisible] = useState(false)
-  const [fee, setFee] = useSafeState(0)
-  const [mystery, setMystery] = useState(BitBowTypes[0])
+  const [allFees, setAllFees] = useSafeState<IFee[]>([])
   const [formAsset, setFormAsset] = useState<FormAssetProperty>()
-  const [leftTime, setLeftTime] = useState('')
   const [isFirst, setIsFirst] = useState(false)
   const [pageLoading, setPageLoading] = useState(true)
+  const [mysteryOptions, setMysteryOptions] = useSafeState<IMysteryItem[]>([])
+  const [activeType, setActiveType] = useSafeState(BitBowTypeEnum.BOW)
 
-  const nextSunday = moment().day(7).startOf('day')
+  const mystery = useMemo(() => {
+    return BitBowTypes.find(o => o.value === activeType)
+  }, [activeType])
+
+  const fee = useMemo(() => {
+    return allFees.find(o => o.type === activeType)?.value || 0
+  }, [activeType, allFees])
 
   // 获取开盲盒所需费用
-  const getMintFee = async () => {
-    const fee = await getBitBowFactoryContract().methods.mintFee().call();
-    setFee(fee)
+  const getAllMintFees = async (): Promise<IFee[]> => {
+    const calls = MYSTERY_OPTIONS.map(o => ({
+      address: getBitBowFactoryAddress(),
+      name: 'mintFee',
+      params: [o.type]
+    }))
+    let results = await multicall(BitBowFactoryAbi, calls)
+    const res = MYSTERY_OPTIONS.map((o, idx) => ({
+      type: o.type,
+      value: new BigNumber(results[idx])?.toNumber()
+    }))
+    return res
   }
+
+  // 显示哪几个盲盒允许用户选中
+  const handleSelectMysteryOptions = async (): Promise<IMysteryItem[]> => {
+    const calls = MYSTERY_OPTIONS.map(o => ({
+      address: getBitBowFactoryAddress(),
+      name: 'formOpen',
+      params: [o.type]
+    }))
+
+    const results = await multicall(BitBowFactoryAbi, calls)
+    return MYSTERY_OPTIONS.filter((o, idx) => {
+      if (results[idx]) return o
+    })
+  }
+
 
   // 获取是否第一次抽盲盒
   const getIsFirst = async () => {
     try {
+      const allFees = await getAllMintFees()
+      setAllFees(allFees)
       const isNft = await getBitBowNFTContract().methods.balanceOf(account).call();
-      setIsFirst(!Number(isNft))
+      const isFirst = !Number(isNft)
+      setIsFirst(isFirst)
+      if (isFirst) {
+        setMysteryOptions(MYSTERY_OPTIONS.slice(0, 1))
+        setActiveType(BitBowTypeEnum.BOW)
+      } else {
+        const options = await handleSelectMysteryOptions()
+        setMysteryOptions(options)
+        setActiveType(options[0]?.type)
+      }
       setPageLoading(true)
     } finally {
       setPageLoading(false)
@@ -67,7 +136,6 @@ const MysteryBox: React.FC = () => {
   const handleOpenMystery = async () => {
     try {
       setLoading(true)
-      await getMintFee();
       // 判断是否
       if (assets.arrowNum < fee) {
         return notification.info({
@@ -111,24 +179,17 @@ const MysteryBox: React.FC = () => {
     }
   }
 
-  // 距离下一次更换盲盒类型时间
-  useInterval(() => {
-    const duration = moment.duration(nextSunday.diff(moment()))
-    setLeftTime(`
-      ${duration.days()}d
-      ${duration.hours()}h
-      ${duration.minutes()}m
-      ${duration.seconds()}s
-    `)
-  }, 1000, { immediate: true })
+  const handlePrev = async (idx: number) => {
+    setActiveType(mysteryOptions[idx - 1].type)
+  }
+  const handleNext = async (idx: number) => {
+    setActiveType(mysteryOptions[idx + 1].type)
+  }
 
   useEffect(() => {
     getIsFirst()
   }, [account])
 
-  useEffect(() => {
-    setMystery(getMysteryItem())
-  }, [])
 
   if (pageLoading) return <Loading />
 
@@ -154,20 +215,46 @@ const MysteryBox: React.FC = () => {
           </>
         ) : (
           <>
-            <img src={giftImg} alt="" />
-            <div className={cx('info')}>
-              This blind box contains an {mystery.label}. Cost for each attempt: {fee} Targets
+            <div className={cx('mystery-options')}>
               {
-                !isFirst && (
-                  <div className={cx('left-time')}>
-                    Current round left: {leftTime}
-                  </div>
-                )
+                mysteryOptions.map((o, idx) => {
+                  const isActive = o.type === activeType
+                  return (
+                    <div className={cx('img-container', { active: isActive })} key={o.type}>
+                      <img className={cx('equiment')} src={o.iconSrc} alt="giftBowImg" />
+                      {
+                        isActive && (
+                          <div className={cx('steps-container')}>
+                            {idx !== 0 && (<img
+                              className={cx('step-btn')}
+                              src={stepRightImg}
+                              alt="stepRightImg"
+                              onClick={() => handlePrev(idx)}
+                            />)}
+                            {
+                              idx !== mysteryOptions.length - 1 && (
+                                <img
+                                  className={cx('step-btn')}
+                                  src={stepLeftImg}
+                                  alt="stepLeftImg"
+                                  onClick={() => handleNext(idx)}
+                                />
+                              )
+                            }
+                          </div>
+                        )
+                      }
+                    </div>
+                  )
+                })
               }
+            </div>
+            <div className={cx('info')}>
+              This blind box contains an <strong>{mystery?.label}</strong>. Cost for each attempt: <strong>{fee} Targets</strong>
             </div>
             <ConfirmBtn
               style={{ marginTop: '16px' }}
-              title={isApproved ? 'Open it' : 'Approve it'}
+              title={isApproved ? 'Claim this mystery box' : 'Approve it'}
               disabled={disabled}
               loading={loading}
               onClick={isApproved ? handleOpenMystery : handleApprove}

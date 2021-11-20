@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { getPropertiesByIds } from "state/account/fetch"
 import { getBitBowStoreAddress } from "utils/addressHelpers"
 import { getBitBowNFTContract } from "utils/contractHelpers"
@@ -31,6 +31,8 @@ const useTotalAmount = () => {
 
 const useStoreList = () => {
   const [storeList, setStoreList] = useSafeState<StoreAsset[]>([])
+  const [isLoading, setIsLoading] = useSafeState(false)
+  const [nextBeginIdx, setNextBeginIdx] = useSafeState(0)
 
   const deleteStoreByTokenId = useCallback(async (id: string) => {
     const idx = storeList.findIndex(o => +o.id === +id)
@@ -41,35 +43,47 @@ const useStoreList = () => {
     }
   }, [storeList])
 
-  
+
   const fetchStoreList = useCallback(async (totalAmount: number) => {
     const account = getBitBowStoreAddress()
 
-    const ids = storeList.map(o => o.id)
-    const beginIdx= storeList.length ? storeList.length : 0
-    const endIdx = beginIdx + FETCH_STEP
-    const data = await getPropertiesByIds(account, beginIdx, endIdx > totalAmount ? totalAmount : endIdx)
+    if (isLoading) return
+    if (nextBeginIdx >= totalAmount) return
 
-    // 获取所有id对应的属性
-    const priceCalls = data.map((item, index) => ({
-      address: getBitBowStoreAddress(),
-      name: 'getNFT',
-      params: [new BigNumber(item.id).toNumber()]
-    }))
-    const priceResults = await multicall(BitBowStoreAbi, priceCalls)
+    try {
+      setIsLoading(true)
+      const endIdx = nextBeginIdx + FETCH_STEP
+      const data = await getPropertiesByIds(account, nextBeginIdx, endIdx > totalAmount ? totalAmount : endIdx)
 
-    const res = data
-      .filter(o => !ids.includes(o.id))
-      .map((item, index) => ({
-      ...item,
-      price: priceResults[index][0].toNumber(),
-      owner: priceResults[index][1]
-    }))
+      // 获取所有id对应的属性
+      const priceCalls = data.map((item, index) => ({
+        address: getBitBowStoreAddress(),
+        name: 'getNFT',
+        params: [new BigNumber(item.id).toNumber()]
+      }))
+      const priceResults = await multicall(BitBowStoreAbi, priceCalls)
 
-    setStoreList(storeList.concat(res))
-  }, [storeList])
+      const ids = storeList.map(o => o.id)
+
+      const res = data
+        .filter(o => !ids.includes(o.id))
+        .map((item, index) => ({
+          ...item,
+          price: priceResults[index][0].toNumber(),
+          owner: priceResults[index][1]
+        }))
+      
+      setStoreList(storeList.concat(res))
+      setNextBeginIdx(nextBeginIdx + res.length)
+      setIsLoading(false)
+    } catch (e) {
+      setIsLoading(false)
+    }
+  }, [isLoading, nextBeginIdx, storeList])
 
   return {
+    isLoading,
+    nextBeginIdx,
     storeList,
     fetchStoreList,
     deleteStoreByTokenId

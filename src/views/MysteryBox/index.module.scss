@@ -3,15 +3,74 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  > img {
-    width: 711px;
+
+  .mystery-options {
+    height: 427px;
+  }
+  .img-container {
+    position: relative;
+    height: 427px;
+    width: 153px;
+    opacity: .5;
+    margin-right: 67px;
+    &:last-child {
+      margin-right: 0;
+    }
+    .equiment {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 140px;
+      bottom: 66px;
+      z-index: 100;
+      margin-right: 67px;
+    }
+    &.active {
+      width: 621px;
+      margin-left: -93px;
+      margin-right: -93px;
+      background: url(../../assets/light.webp) no-repeat center;
+      opacity: 1;
+      &:not(:first-child) {
+        margin-left: -160px;
+      }
+      .equiment {
+        height: 209px;
+        margin-right: 0;
+      }
+      .steps-container {
+        position: absolute;
+        bottom: 23px;
+        left: 50%;
+        transform: translateX(-50%);
+        .step-btn {
+          width: 43px;
+          height: 43px;
+          cursor: pointer;
+          transition: all .3s linear;
+          &.hidden {
+            display: none;
+          }
+          &:not(:first-child) {
+            margin-left: 40px;
+          }
+          &:hover {
+            opacity: .9;
+          }
+        }
+      }
+    }
+  }
+  .mystery-options {
+    display: flex;
+    align-items: center;
   }
   .info {
     margin-top: 24px;
     color: #fff;
     text-align: center;
-    .left-time {
-      margin-top: 14px;
+    > strong {
+      color: #FEDD71;
     }
   }
   .cong {

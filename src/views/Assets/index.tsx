@@ -13,7 +13,7 @@ import { getBitBowFactoryAddress } from 'utils/addressHelpers';
 
 import TargetIcon from 'assets/target.webp';
 import ArrowsIcon from 'assets/arrows.webp';
-import GiftIcon from 'assets/gift-small.webp';
+import GiftBowIcon from 'assets/gift-bow.webp';
 import BnbIcon from 'assets/bnbLogo.webp';
 import styles from './index.module.scss';
 
@@ -132,7 +132,7 @@ const AccountAssets: React.FC = () => {
       {/* 是否有免费领取盲盒机会 */}
       {isFree &&
         <div className={cx('free-bow-container')}>
-          <img src={GiftIcon} alt="GiftIcon" />
+          <img src={GiftBowIcon} alt="GiftBowIcon" />
           <div className={cx('content')}>You have a free bow!</div>
           <Button
             size="small"
