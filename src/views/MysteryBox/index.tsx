@@ -23,6 +23,7 @@ import giftBowImg from 'assets/gift-bow.webp';
 import giftArrowImg from 'assets/gift-arrow.webp';
 import giftPeepSightImg from 'assets/gift-peep-sight.webp';
 import giftArmguardImg from 'assets/gift-armguard.webp';
+import lightImg from 'assets/light.webp';
 import stepLeftImg from 'assets/step-left.webp';
 import stepRightImg from 'assets/step-right.webp';
 
@@ -97,6 +98,7 @@ const MysteryBox: React.FC = () => {
 
   // 显示哪几个盲盒允许用户选中
   const handleSelectMysteryOptions = async (): Promise<IMysteryItem[]> => {
+
     const calls = MYSTERY_OPTIONS.map(o => ({
       address: getBitBowFactoryAddress(),
       name: 'formOpen',
@@ -105,7 +107,7 @@ const MysteryBox: React.FC = () => {
 
     const results = await multicall(BitBowFactoryAbi, calls)
     return MYSTERY_OPTIONS.filter((o, idx) => {
-      if (results[idx]) return o
+      if (results[idx][0]) return o
     })
   }
 
@@ -220,9 +222,22 @@ const MysteryBox: React.FC = () => {
                 mysteryOptions.map((o, idx) => {
                   const isActive = o.type === activeType
                   return (
-                    <div className={cx('img-container', { active: isActive })} key={o.type}>
-                      <img className={cx('equiment')} src={o.iconSrc} alt="giftBowImg" />
-                      {
+                    <div
+                      className={cx('img-container', { active: isActive })}
+                      key={o.type}
+                    >
+                      <img
+                        className={cx('equiment')}
+                        src={o.iconSrc}
+                        alt="giftBowImg"
+                        onClick={() => setActiveType(o.type)}
+                      />
+                      {/* <img
+                        className={cx('light-bg')}
+                        src={lightImg}
+                        alt={lightImg}
+                      /> */}
+                      {/* {
                         isActive && (
                           <div className={cx('steps-container')}>
                             {idx !== 0 && (<img
@@ -243,14 +258,14 @@ const MysteryBox: React.FC = () => {
                             }
                           </div>
                         )
-                      }
+                      } */}
                     </div>
                   )
                 })
               }
             </div>
             <div className={cx('info')}>
-              This blind box contains an <strong>{mystery?.label}</strong>. Cost for each attempt: <strong>{fee} Targets</strong>
+              This blind box contains an <strong>{mystery?.label}</strong>. Cost for each attempt: <strong>{fee} Arrows</strong>
             </div>
             <ConfirmBtn
               style={{ marginTop: '16px' }}

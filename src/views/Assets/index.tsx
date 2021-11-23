@@ -6,9 +6,10 @@ import { useWeb3React } from '@web3-react/core';
 import { useAccount } from 'state/account/hooks'
 import { BitBowTypes } from 'utils/icon';
 import useApproveArrow from 'hooks/useApproveArrow';
-import { getBitBowFactoryContract, getBitBowNFTContract } from 'utils/contractHelpers';
+import { getBitBowFactoryContract } from 'utils/contractHelpers';
 import useWeb3 from 'hooks/useWeb3';
 import { fetchClubCount } from 'state/account/fetch';
+import { useAddFormAssets } from 'state/account/hooks'
 import { getBitBowFactoryAddress } from 'utils/addressHelpers';
 
 import TargetIcon from 'assets/target.webp';
@@ -23,6 +24,8 @@ const AccountAssets: React.FC = () => {
   const web3 = useWeb3()
   const { account } = useWeb3React()
   const { assets, formAssets } = useAccount()
+  const { updateFormAssets } = useAddFormAssets()
+
   const accountEllipsis = useMemo(() => {
     return account
       ? `${account.substring(0, 6)}...${account.substring(account.length - 6)}`
@@ -86,6 +89,8 @@ const AccountAssets: React.FC = () => {
         gas: 500000
       })
       await getIsFree()
+      // 更新用户装备清单列表
+      updateFormAssets()
     } catch (e: any) {
       notification.error({
         message: 'Error',
@@ -95,7 +100,7 @@ const AccountAssets: React.FC = () => {
     } finally {
       setClaimLoading(false)
     }
-  }, [])
+  }, [account, web3, notification])
 
 
   useEffect(() => {
